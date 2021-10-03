@@ -18,11 +18,6 @@ public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
 
-    @Autowired
-    public MemberServiceImpl(MemberJpaRepository memberJpaRepository) {
-        this.memberRepository = memberJpaRepository;
-    }
-
     @Override
     @Transactional
     public Member joinMember(Member member) {
@@ -46,6 +41,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public void updateMember(Long id, Member memberParam) {
         Member findMember = findMemberById(id);
         updateFindMember(memberParam, findMember);
@@ -53,6 +49,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public void removeMember(Long memberId) {
         memberRepository.removeById(memberId);
     }

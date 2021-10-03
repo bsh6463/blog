@@ -10,12 +10,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
 
     @Override
+    @Transactional
     public Post savePost(Post post) {
         return postRepository.save(post);
     }
@@ -36,6 +37,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public Post updatePost(Long id, Post postParam) {
         Post post = postRepository.findById(id).orElseThrow(() -> new NoResultException());
         post.changeTitle(postParam.getTitle());
@@ -44,6 +46,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public void deletePost(Long id) {
         Post findPost = postRepository.findById(id).orElseThrow(() -> new NoResultException());
         postRepository.removePost(findPost);
