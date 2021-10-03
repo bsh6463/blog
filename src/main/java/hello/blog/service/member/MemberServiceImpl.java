@@ -1,24 +1,27 @@
-package hello.blog.service;
+package hello.blog.service.member;
 
 import hello.blog.domain.member.Member;
-import hello.blog.repository.MemberJpaRepository;
+import hello.blog.repository.member.MemberJpaRepository;
+import hello.blog.repository.member.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.NoResultException;
+
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
-    final MemberJpaRepository memberRepository;
+    private final MemberRepository memberRepository;
 
+    @Autowired
     public MemberServiceImpl(MemberJpaRepository memberJpaRepository) {
         this.memberRepository = memberJpaRepository;
     }
-
 
     @Override
     @Transactional
@@ -32,14 +35,14 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Member findMemberById(Long memberId) {
-        Member findMember = memberRepository.findMemberById(memberId).orElse(new Member());
+    public Member findMemberById(Long memberId) throws NoResultException{
+        Member findMember = memberRepository.findMemberById(memberId).orElseThrow(() -> new NoResultException());
         return findMember;
     }
 
     @Override
     public Member findMemberByName(String memberName) {
-        return memberRepository.findMemberByName(memberName).orElse(new Member());
+        return memberRepository.findMemberByName(memberName).orElseThrow(() -> new NoResultException());
     }
 
     @Override

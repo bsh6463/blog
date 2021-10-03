@@ -1,4 +1,4 @@
-package hello.blog.service;
+package hello.blog.service.member;
 
 import hello.blog.domain.member.Member;
 

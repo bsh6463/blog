@@ -1,4 +1,4 @@
-package hello.blog.repository;
+package hello.blog.repository.member;
 
 import hello.blog.domain.member.Member;
 import lombok.RequiredArgsConstructor;
