@@ -1,13 +1,11 @@
 package hello.blog.repository.member;
 
 import hello.blog.domain.member.Member;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
 
@@ -34,7 +32,7 @@ class MemberJpaRepositoryTest {
 
         //then
         assertThat(savedMember.getId()).isEqualTo(member.getId());
-        assertThat(savedMember.getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(savedMember.getUserId()).isEqualTo(member.getUserId());
         assertThat(savedMember.getPassword()).isEqualTo(member.getPassword());
         assertThat(savedMember.getName()).isEqualTo(member.getName());
         assertThat(savedMember.getEmail()).isEqualTo(member.getEmail());

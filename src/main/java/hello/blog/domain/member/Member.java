@@ -1,30 +1,39 @@
 package hello.blog.domain.member;
 
+import hello.blog.domain.comment.Comment;
+import hello.blog.domain.post.Post;
 import lombok.Getter;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity @Getter
 public class Member {
 
-    @Id
+    @Id @Column(name = "MEMBER_ID")
     @GeneratedValue
     private Long id;
 
+    @OneToMany(mappedBy = "member")
+    @ToString.Exclude
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    @ToString.Exclude
+    private List<Comment> comments = new ArrayList<>();
+
     private String name;
-
-    private String memberId; //회원이 로그인 시 사용하는 id
-
+    private String userId; //회원이 로그인 시 사용하는 id
     private String password;
-
     private String email;
 
 
-    public Member(String name, String memberId, String password, String email) {
+
+    public Member(String name, String userId, String password, String email) {
         this.name = name;
-        this.memberId = memberId;
+        this.userId = userId;
         this.password = password;
         this.email = email;
     }
