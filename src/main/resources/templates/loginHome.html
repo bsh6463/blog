@@ -20,12 +20,12 @@
       </button>
     </div>
     <div class="col">
-      <!--form th:action="@{/logout}" method="post">-->
+      <form th:action="@{/logout}" method="post">
         <button class="w-100 btn btn-dark btn-lg"
                 th:onclick="|location.href='@{/logout}'|" type="submit" formmethod="post">
           로그아웃
         </button>
-      <!--/form-->
+      </form>
     </div>
   </div>
   <hr class="my-4">
