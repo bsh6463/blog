@@ -2,6 +2,7 @@ package hello.blog.domain.post;
 
 import hello.blog.domain.comment.Comment;
 import hello.blog.domain.member.Member;
+import hello.blog.web.dto.PostDto;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -53,5 +54,12 @@ public class Post {
 
     public void addViewCnt(){
         viewCnt++;
+    }
+
+    public Post dtoToPost(PostDto postDto){
+        this.changeTitle(postDto.getTitle());
+        this.changeContent(postDto.getContent());
+
+        return this;
     }
 }

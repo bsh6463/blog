@@ -12,6 +12,8 @@ public interface MemberService {
 
     Member joinMember(Member member);
 
+    List<Member> findAll();
+
     Member findMemberById(Long memberId);
 
     Member findMemberByName(String memberName);

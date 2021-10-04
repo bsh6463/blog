@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
+import java.util.List;
 
 
 @Service
@@ -22,6 +23,11 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public Member joinMember(Member member) {
        return memberRepository.save(member);
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return memberRepository.findAll().orElseThrow(NoResultException::new);
     }
 
     @Transactional

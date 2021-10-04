@@ -35,9 +35,9 @@ public class MemberJpaRepository implements MemberRepository {
         return results.stream().findAny();
     }
 
-    public List<Member> findAll(){
-        return em.createQuery("select m from Member m", Member.class)
-                .getResultList();
+    public Optional<List<Member>> findAll(){
+        return Optional.ofNullable(em.createQuery("select m from Member m", Member.class)
+                .getResultList());
     }
 
     /**

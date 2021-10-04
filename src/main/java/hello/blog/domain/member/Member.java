@@ -52,5 +52,7 @@ public class Member {
     public void changeEmail(String newEmail){
         this.email = newEmail;
     }
+
+
 }
 

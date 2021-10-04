@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+      <h2>제목</h2>
+      <div class="well" th:text="${post.title}">제목</div>
+      <h3>내용</h3>
+      <div class="well well-lg" th:text="${post.content}">본문내용</div>
+    </div>
+
+</body>
+</html>
