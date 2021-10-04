@@ -2,6 +2,7 @@ package hello.blog.domain.member;
 
 import hello.blog.domain.comment.Comment;
 import hello.blog.domain.post.Post;
+import hello.blog.web.dto.MemberDto;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -53,6 +54,12 @@ public class Member {
         this.email = newEmail;
     }
 
+    public MemberDto memberToDto(Member member){
+        return new MemberDto(member.getId(), member.getUserId(), member.getName(), member.getEmail());
+    }
 
+    public MemberDto memberToDto() {
+        return new MemberDto(this.getId(),this.getUserId(), this.getName(), this.getEmail());
+    }
 }
 

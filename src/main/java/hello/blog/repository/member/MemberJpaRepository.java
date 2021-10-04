@@ -40,6 +40,12 @@ public class MemberJpaRepository implements MemberRepository {
                 .getResultList());
     }
 
+    @Override
+    public Optional<Member> findMemberByUserId(String userId) {
+        List<Member> results = em.createQuery("select m from Member m where m.userId=:userId", Member.class).setParameter("userId", userId).getResultList();
+        return results.stream().findAny();
+    }
+
     /**
      * update는 변경감지를 활용함.
      * 영속 상태인 entity는 Transaction안에서 변경이 일어나면 Transaction종료 시

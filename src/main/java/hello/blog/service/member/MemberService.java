@@ -18,6 +18,8 @@ public interface MemberService {
 
     Member findMemberByName(String memberName);
 
+    Member findMemberByUserId(String userId);
+
     void updateMember(Long id, Member memberParam);
 
     void removeMember(Long memberId);
