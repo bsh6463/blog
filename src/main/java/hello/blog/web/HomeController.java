@@ -27,10 +27,12 @@ public class HomeController {
 
         //세션에 회원 정보가 없는 경우?
         if(memberDto == null){
+            log.info("session out");
             return "home";
         }
 
         model.addAttribute("member", memberDto);
+        log.info("user id = {}",memberDto.getUserId());
         return "loginHome";
 
     }
