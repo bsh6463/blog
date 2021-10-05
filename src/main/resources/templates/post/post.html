@@ -20,5 +20,12 @@
       <div class="well well-lg" th:text="${post.content}">본문내용</div>
     </div>
 
+<form th:action="@{/posts/{postId}/delete(postId=${post.id})}" method="post">
+    <button class="w-100 btn btn-dark btn-lg"
+            th:onclick="|location.href='@{/posts/{postId}/delete(postId=${post.id})}'|" type="submit">
+        글 삭제
+    </button>
+</form>
+
 </body>
 </html>
