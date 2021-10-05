@@ -5,6 +5,12 @@
         href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="col">
+    <button class="w-100 btn btn-secondary btn-lg" type="button"
+            th:onclick="|location.href='@{/}'|">
+        홈으로 이동
+    </button>
+</div>
 
     <div class="container">
         <h4 class="mb-3" th:text="|로그인: ${member.userId}|">로그인 사용자 이름</h4>
