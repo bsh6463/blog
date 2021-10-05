@@ -1,10 +1,13 @@
 package hello.blog.web;
 
+import hello.blog.domain.comment.Comment;
 import hello.blog.domain.member.Member;
 import hello.blog.domain.post.Post;
 import hello.blog.repository.post.PostRepository;
+import hello.blog.service.comment.CommentService;
 import hello.blog.service.member.MemberService;
 import hello.blog.service.post.PostService;
+import hello.blog.web.dto.CommentDto;
 import hello.blog.web.dto.MemberDto;
 import hello.blog.web.dto.PostDto;
 import hello.blog.web.session.SessionManager;
@@ -29,6 +32,7 @@ public class PostFormController {
     private final PostService postService;
     private final MemberService memberService;
     private final SessionManager sessionManager;
+    private final CommentService commentService;
 
     @GetMapping
     public String posts(Model model, HttpServletRequest request) {
@@ -47,12 +51,19 @@ public class PostFormController {
     @GetMapping("/{postId}")
     public String post(@PathVariable("postId") Long id, Model model, HttpServletRequest request){
         MemberDto memberDto = (MemberDto) sessionManager.getSession(request);
-        Post post = postService.findPostById(id);
 
+        Post post = postService.findPostById(id);
         PostDto postDto = postToDto(post);
+
+        List<Comment> comments = post.getComments();
+        List<CommentDto> commentDtos = comments.stream()
+                .map(comment -> new CommentDto(comment.getId(), comment.getContent(), memberDto, postDto.getId())).collect(Collectors.toList());
 
         model.addAttribute("member", memberDto);
         model.addAttribute("post", postDto);
+        model.addAttribute("comments", commentDtos);
+        model.addAttribute("comment", new CommentDto());
+
         return "post/post";
     }
 
