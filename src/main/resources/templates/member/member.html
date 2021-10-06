@@ -6,10 +6,16 @@
 </head>
 <body>
 <div class="col">
-  <button class="w-100 btn btn-secondary btn-lg" type="button"
-          th:onclick="|location.href='@{/}'|">
-    홈으로 이동
-  </button>
+  <div class="col">
+    <button class="w-100 btn btn-secondary btn-lg" type="button"
+            th:onclick="|location.href='@{/}'|">
+      홈
+    </button>
+    <p></p>
+    <button class="w-100 btn btn-secondary btn-lg" type="button"
+            th:onclick="|history.back(-1);|">
+      뒤로
+    </button>
 </div>
 <div>
   <table class="table">

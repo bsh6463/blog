@@ -9,9 +9,13 @@
 <div class="col">
   <button class="w-100 btn btn-secondary btn-lg" type="button"
           th:onclick="|location.href='@{/}'|">
-    홈으로 이동
+    홈
   </button>
-</div>
+  <p></p>
+  <button class="w-100 btn btn-secondary btn-lg" type="button"
+          th:onclick="|history.back(-1);|">
+    뒤로
+  </button>
 <div class="container" style="max-width: 600px">
   <div class="py-5 text-center">
     <h2>회원 목록</h2>
