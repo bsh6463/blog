@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <link th:href="@{/templates/css/bootstrap.min.css}"
-        href="css/bootstrap.min.css" rel="stylesheet">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container" style="max-width: 600px">
@@ -12,7 +12,7 @@
   </div>
   <div class="row">
     <div class="col">
-      <button class="w-100 btn btn-secondary btn-lg" type="button"
+      <button class="w-100 btn btn-primary btn-lg" type="button"
               th:onclick="|location.href='@{/members/new/form}'|">
         회원 가입
       </button>

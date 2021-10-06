@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
+          href="../../static/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
             max-width: 560px;
@@ -27,7 +27,7 @@
         </div>
         <div>
             <label for="loginId">로그인 ID</label>
-            <input type="text" id="loginId" th:field="*{loginId}" class="formcontrol"
+            <input type="text" id="loginId" th:field="*{loginId}" class="form-control"
                    th:errorclass="field-error">
 
         <div>
