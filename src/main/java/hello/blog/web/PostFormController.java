@@ -32,7 +32,6 @@ public class PostFormController {
     private final PostService postService;
     private final MemberService memberService;
     private final SessionManager sessionManager;
-    private final CommentService commentService;
 
     @GetMapping
     public String posts(Model model, HttpServletRequest request) {
@@ -57,12 +56,13 @@ public class PostFormController {
 
         List<Comment> comments = post.getComments();
         List<CommentDto> commentDtos = comments.stream()
-                .map(comment -> new CommentDto(comment.getId(), comment.getContent(), memberDto, postDto.getId())).collect(Collectors.toList());
+                .map(comment -> new CommentDto(comment.getId(), comment.getContent(), comment.getMember().memberToDto(),
+                        postDto.getId())).collect(Collectors.toList());
 
         model.addAttribute("member", memberDto);
         model.addAttribute("post", postDto);
         model.addAttribute("comments", commentDtos);
-        model.addAttribute("comment", new CommentDto());
+        model.addAttribute("commentDto", new CommentDto());
 
         return "post/post";
     }
