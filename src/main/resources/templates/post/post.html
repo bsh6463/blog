@@ -41,7 +41,7 @@
 <form action="post.html" th:action="@{/comments/new?postId={id}(id=${post.id})}" th:object="${commentDto}" method="post">
     <div class="form-group">
         <label for="commentString" class="form-label">댓글</label>
-        <input type="text" class="form-control" name="commentString" id="commentString" placeholder="댓글을 입력">
+        <input type="text" class="form-control" th:field="*{content}" name="commentString" id="commentString" placeholder="댓글을 입력">
     </div>
     <button type="submit" class="btn btn-primary" >Submit</button>
 

@@ -1,14 +1,20 @@
 package hello.blog.web.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+
 public class CommentDto {
 
     private Long id;
     private String content;
     private MemberDto member;
     private Long postId;
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public CommentDto() {
     }

@@ -13,6 +13,7 @@ import hello.blog.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,20 +31,24 @@ public class CommentController {
     private final PostService postService;
 
     @PostMapping("/new")
-    public String addComment(@RequestParam("postId") Long postId, @RequestParam("commentString") String commentString,
+    public String addComment(@RequestParam("postId") Long postId, @ModelAttribute("commentDto") CommentDto commentDto, BindingResult bindingResult,
                              HttpServletRequest request, RedirectAttributes redirectAttributes){
 
+        if(bindingResult.hasErrors()){
+            bindingResult.getAllErrors().forEach(System.out::println);
+        }
         log.info("Comment Controller 시작.");
-        log.info("commentString: {}", commentString);
-        //log.info("commentDto:{}", commentDto.toString());
-        //log.info("commentDto content:{}", commentDto.getContent());
+        log.info("bindingResult: {}", bindingResult.toString());
+        //log.info("commentString: {}", commentString);
+        log.info("commentDto:{}", commentDto.toString());
+        log.info("commentDto content:{}", commentDto.getContent());
 
         MemberDto memberDto = (MemberDto) sessionManager.getSession(request);
         Member member = memberService.findMemberById(memberDto.getId());
         Post post = postService.findPostById(postId);
 
-        //Comment comment = dtoToComment(commentDto);
-        Comment comment= new Comment(commentString);
+        Comment comment = dtoToComment(commentDto);
+        //Comment comment= new Comment(commentString);
         comment.setMember(member);
         comment.setPost(post);
 
