@@ -3,15 +3,12 @@ package hello.blog.web;
 import hello.blog.domain.comment.Comment;
 import hello.blog.domain.member.Member;
 import hello.blog.domain.post.Post;
-import hello.blog.repository.post.PostRepository;
-import hello.blog.service.comment.CommentService;
 import hello.blog.service.member.MemberService;
 import hello.blog.service.post.PostService;
 import hello.blog.web.dto.CommentDto;
 import hello.blog.web.dto.MemberDto;
 import hello.blog.web.dto.PostDto;
 import hello.blog.web.session.SessionManager;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +35,7 @@ public class PostFormController {
 
         List<Post> posts = postService.findAll();
         List<PostDto> postsDto = posts.stream()
-                .map(post -> new PostDto(post.getId(),post.getTitle(), post.getContent(),post.getMember().memberToDto())).collect(Collectors.toList());
+                .map(post -> new PostDto(post.getId(),post.getTitle(), post.getContent(),post.getMember().memberToDto(),post.getLastModifiedDate())).collect(Collectors.toList());
 
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("posts", postsDto);
@@ -52,12 +48,12 @@ public class PostFormController {
         MemberDto memberDto = (MemberDto) sessionManager.getSession(request);
 
         Post post = postService.findPostById(id);
-        PostDto postDto = postToDto(post);
+        PostDto postDto = post.postToDto();
 
         List<Comment> comments = post.getComments();
         List<CommentDto> commentDtos = comments.stream()
                 .map(comment -> new CommentDto(comment.getId(), comment.getContent(), comment.getMember().memberToDto(),
-                        postDto.getId())).collect(Collectors.toList());
+                        postDto.getId(), comment.getLastModifiedDate())).collect(Collectors.toList());
 
         model.addAttribute("member", memberDto);
         model.addAttribute("post", postDto);
@@ -106,8 +102,5 @@ public class PostFormController {
         return "redirect:/posts";
     }
 
-    public PostDto postToDto(Post post){
-        return new PostDto(post.getId(),post.getTitle(), post.getContent(), post.getMember().memberToDto());
-    }
 
 }

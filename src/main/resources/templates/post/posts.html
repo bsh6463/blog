@@ -39,6 +39,7 @@
                 <th>  순서  </th>
                 <th>  제목  </th>
                 <th>  작성자  </th>
+                <th>  작성일  </th>
 
             </tr>
             </thead>
@@ -47,6 +48,7 @@
                 <td><a href="post.html" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.id}">  순서</a></td>
                 <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.title}">  제목</a></td>
                 <td th:text="${post.member.userId}">  작성자</td>
+                <td th:text="${{post.lastModifiedDate}}">  작성일</td>
             </tr>
             </tbody>
         </table>

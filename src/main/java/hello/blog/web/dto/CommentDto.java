@@ -1,7 +1,10 @@
 package hello.blog.web.dto;
 
+
 import lombok.Getter;
-import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 @Getter
 
@@ -12,6 +15,9 @@ public class CommentDto {
     private MemberDto member;
     private Long postId;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastModifiedDate;
+
     public void setContent(String content) {
         this.content = content;
     }
@@ -19,10 +25,19 @@ public class CommentDto {
     public CommentDto() {
     }
 
-    public CommentDto(Long id, String content, MemberDto memberDto, Long postId) {
+    public CommentDto(Long id, String content, MemberDto member, Long postId, LocalDateTime lastModifiedDate) {
         this.id = id;
         this.content = content;
-        this.member = memberDto;
+        this.member = member;
         this.postId = postId;
+        this.lastModifiedDate = lastModifiedDate;
     }
+
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+
+
 }

@@ -2,21 +2,40 @@ package hello.blog.domain.comment;
 
 import hello.blog.domain.member.Member;
 import hello.blog.domain.post.Post;
+import hello.blog.web.dto.CommentDto;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@EntityListeners(value = AuditingEntityListener.class)
 public class Comment {
 
     @Id
     @GeneratedValue
     @Column(name = "COMMENT_ID")
     private Long id;
+
+    /**
+     * em.persist()전에 호출됨.
+     */
+    @CreatedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastModifiedDate;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
@@ -58,9 +77,19 @@ public class Comment {
         post.getComments().add(this);
     }
 
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
 
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
     public void changeContent(String content){
         this.content = content;
+    }
+
+    public Comment dtoToComment(CommentDto commentDto){
+        return new Comment(commentDto.getContent());
     }
 }

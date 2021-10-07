@@ -5,17 +5,34 @@ import hello.blog.domain.post.Post;
 import hello.blog.web.dto.MemberDto;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity @Getter
+@EntityListeners(value = AuditingEntityListener.class)
 public class Member {
 
     @Id @Column(name = "MEMBER_ID")
     @GeneratedValue
     private Long id;
+
+    /**
+     * em.persist()전에 호출됨.
+     */
+    @CreatedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastModifiedDate;
 
     @OneToMany(mappedBy = "member")
     @ToString.Exclude
@@ -42,6 +59,14 @@ public class Member {
     public Member() {
     }
 
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public void changeName(String newName){
         this.name = newName;
     }
@@ -55,11 +80,13 @@ public class Member {
     }
 
     public MemberDto memberToDto(Member member){
-        return new MemberDto(member.getId(), member.getUserId(), member.getName(), member.getEmail());
+        return new MemberDto(member.getId(), member.getUserId(), member.getName(), member.getEmail(), member.getLastModifiedDate());
     }
 
     public MemberDto memberToDto() {
-        return new MemberDto(this.getId(),this.getUserId(), this.getName(), this.getEmail());
+        return new MemberDto(this.getId(),this.getUserId(), this.getName(), this.getEmail(), this.getLastModifiedDate());
     }
+
+
 }
 

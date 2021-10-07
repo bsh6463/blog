@@ -5,17 +5,35 @@ import hello.blog.domain.member.Member;
 import hello.blog.web.dto.PostDto;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity @Getter
+@EntityListeners(value = AuditingEntityListener.class)
 public class Post {
 
     @Id @GeneratedValue
     @Column(name = "POST_ID")
     private Long id;
+
+    /**
+     * em.persist()전에 호출됨.
+     */
+    @CreatedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastModifiedDate;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
@@ -44,6 +62,14 @@ public class Post {
         member.getPosts().add(this);
     }
 
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public void changeTitle(String title){
         this.title = title;
     }
@@ -59,7 +85,16 @@ public class Post {
     public Post dtoToPost(PostDto postDto){
         this.changeTitle(postDto.getTitle());
         this.changeContent(postDto.getContent());
-
         return this;
+    }
+
+    public PostDto postToDto(Post post){
+        return new PostDto(post.getId(),post.getTitle(), post.getContent()
+                , post.getMember().memberToDto(), post.getLastModifiedDate());
+    }
+
+    public PostDto postToDto(){
+        return new PostDto(this.getId(),this.getTitle(), this.getContent()
+                , this.getMember().memberToDto(), this.getLastModifiedDate());
     }
 }

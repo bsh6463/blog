@@ -26,7 +26,7 @@ public class MemberController {
         List<Member> members = memberService.findAll();
         List<MemberDto> memberDtos = members.stream()
                 .map(member -> new MemberDto(member.getId(), member.getUserId(), member.getName()
-                        , member.getEmail())).collect(Collectors.toList());
+                        , member.getEmail(), member.getLastModifiedDate())).collect(Collectors.toList());
         model.addAttribute("members", memberDtos);
         return "member/members";
     }
@@ -34,7 +34,7 @@ public class MemberController {
     @GetMapping("/{id}")
     public String member(@PathVariable("id") Long id, Model model){
         Member memberById = memberService.findMemberById(id);
-        MemberDto memberDto = memberToDto(memberById);
+        MemberDto memberDto = memberById.memberToDto();
         model.addAttribute("member", memberDto);
         return "member/member";
 
@@ -57,7 +57,5 @@ public class MemberController {
         return new Member(memberForm.getName(), memberForm.getUserId(), memberForm.getPassword(),memberForm.getEmail());
     }
 
-    public MemberDto memberToDto(Member member){
-        return new MemberDto(member.getId(), member.getUserId(), member.getName(), member.getEmail());
-    }
+
 }
