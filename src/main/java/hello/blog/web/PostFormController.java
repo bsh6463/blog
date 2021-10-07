@@ -107,7 +107,7 @@ public class PostFormController {
     }
 
     public PostDto postToDto(Post post){
-        return new PostDto(post.getId(),post.getTitle(), post.getContent());
+        return new PostDto(post.getId(),post.getTitle(), post.getContent(), post.getMember().memberToDto());
     }
 
 }
