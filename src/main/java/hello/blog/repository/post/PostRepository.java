@@ -7,10 +7,11 @@ import java.util.Optional;
 
 public interface PostRepository {
 
-    public Post save(Post post);
-    public Optional<Post> findById(Long id);
-    public Optional<Post> findByTitle(String title);
-    public Optional<List<Post>> findAll();
-    public void removePost(Post post);
-    public void clear();
+    Post save(Post post);
+    Optional<Post> findById(Long id);
+    Optional<Post> findByTitle(String title);
+    Optional<List<Post>> findAll();
+    Optional<List<Post>> findByTitleContains(String title);
+    void removePost(Post post);
+    void clear();
 }

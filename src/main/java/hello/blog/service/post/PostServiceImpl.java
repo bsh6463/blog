@@ -23,23 +23,28 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post findPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new NoResultException());
+        return postRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
     @Override
     public Post findPostByTitle(String title) {
-        return  postRepository.findByTitle(title).orElseThrow(() -> new NoResultException());
+        return  postRepository.findByTitle(title).orElseThrow(NoResultException::new);
     }
 
     @Override
     public List<Post> findAll() {
-        return postRepository.findAll().orElseThrow(() -> new NoResultException());
+        return postRepository.findAll().orElseThrow(NoResultException::new);
+    }
+
+    @Override
+    public List<Post> findByTitleContains(String title) {
+        return postRepository.findByTitleContains(title).orElseThrow(NoResultException::new);
     }
 
     @Override
     @Transactional
     public Post updatePost(Long id, Post postParam) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new NoResultException());
+        Post post = postRepository.findById(id).orElseThrow(NoResultException::new);
         post.changeTitle(postParam.getTitle());
         post.changeContent(postParam.getContent());
         return postRepository.save(post);

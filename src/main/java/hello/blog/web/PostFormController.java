@@ -8,6 +8,7 @@ import hello.blog.service.post.PostService;
 import hello.blog.web.dto.CommentDto;
 import hello.blog.web.dto.MemberDto;
 import hello.blog.web.dto.PostDto;
+import hello.blog.web.dto.SearchForm;
 import hello.blog.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,24 +29,43 @@ public class PostFormController {
     private final PostService postService;
     private final MemberService memberService;
     private final SessionManager sessionManager;
+    private final String status = "search";
 
     @GetMapping
     public String posts(Model model, HttpServletRequest request) {
-        MemberDto loginMemberDto = (MemberDto) sessionManager.getSession(request);
+
+        MemberDto loginMemberDto = getLoginMember(request);
 
         List<Post> posts = postService.findAll();
-        List<PostDto> postsDto = posts.stream()
-                .map(post -> new PostDto(post.getId(),post.getTitle(), post.getContent(),post.getMember().memberToDto(),post.getLastModifiedDate())).collect(Collectors.toList());
+        List<PostDto> postsDto = getPostDtos(posts);
 
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("posts", postsDto);
+        model.addAttribute("searchForm", new SearchForm());
+
+        return "post/posts";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam("keyword") String keyword, Model model, HttpServletRequest request){
+
+        log.info("keyword: {}", keyword);
+        MemberDto loginMemberDto = getLoginMember(request);
+
+        List<Post> posts = postService.findByTitleContains(keyword);
+        List<PostDto> postsDto = getPostDtos(posts);
+
+        model.addAttribute("member", loginMemberDto);
+        model.addAttribute("posts", postsDto);
+        model.addAttribute("searchForm", new SearchForm(keyword));
+        model.addAttribute("status", status);
 
         return "post/posts";
     }
 
     @GetMapping("/{postId}")
     public String post(@PathVariable("postId") Long id, Model model, HttpServletRequest request){
-        MemberDto memberDto = (MemberDto) sessionManager.getSession(request);
+        MemberDto memberDto = getLoginMember(request);
 
         Post post = postService.findPostById(id);
         PostDto postDto = post.postToDto();
@@ -60,12 +80,13 @@ public class PostFormController {
         model.addAttribute("comments", commentDtos);
         model.addAttribute("commentDto", new CommentDto());
 
+
         return "post/post";
     }
 
     @GetMapping("/new/form")
     public String postForm(Model model, HttpServletRequest request) {
-        MemberDto memberDto = (MemberDto) sessionManager.getSession(request);
+        MemberDto memberDto = getLoginMember(request);
 
         PostDto postDto = new PostDto();
         //postDto.setTitle("TitleTest");
@@ -77,7 +98,7 @@ public class PostFormController {
 
     @PostMapping("/new/form")
     public String addPost(@ModelAttribute("post") PostDto postDto, HttpServletRequest request) {
-        MemberDto memberDto = (MemberDto) sessionManager.getSession(request);
+        MemberDto memberDto = getLoginMember(request);
         Member findMember = memberService.findMemberById(memberDto.getId());
 
         log.info("post1.title : {}", postDto.getTitle());
@@ -100,6 +121,15 @@ public class PostFormController {
         postService.deletePost(id);
 
         return "redirect:/posts";
+    }
+
+    private MemberDto getLoginMember(HttpServletRequest request) {
+        return (MemberDto) sessionManager.getSession(request);
+    }
+
+    private List<PostDto> getPostDtos(List<Post> posts) {
+        return posts.stream()
+                .map(post -> new PostDto(post.getId(),post.getTitle(), post.getContent(),post.getMember().memberToDto(),post.getLastModifiedDate())).collect(Collectors.toList());
     }
 
 
