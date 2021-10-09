@@ -1,6 +1,8 @@
 package hello.blog.web;
 
+import hello.blog.domain.comment.Comment;
 import hello.blog.domain.member.Member;
+import hello.blog.domain.post.Post;
 import hello.blog.service.member.MemberService;
 import hello.blog.web.dto.MemberDto;
 import hello.blog.web.dto.MemberForm;
@@ -53,6 +55,29 @@ public class MemberController {
 
         return "redirect:/";
     }
+
+
+    @PostMapping("/{memberId}/delete")
+    public String deleteMember(@PathVariable("memberId") Long id, Model model){
+        Member member = memberService.findMemberById(id);
+        Member withdrawnMember = memberService.findMemberByUserId("withdrawnMember");
+
+        List<Comment> comments = member.getComments();
+        for (Comment comment : comments) {
+            comment.setMember(withdrawnMember);
+        }
+
+        List<Post> posts = member.getPosts();
+        for (Post post : posts) {
+            post.setMember(withdrawnMember);
+        }
+
+        memberService.removeMember(id);
+        model.addAttribute("status", "withdrawn");
+
+        return "redirect:/logout";
+    }
+
     public Member formToMember(MemberForm memberForm){
         return new Member(memberForm.getName(), memberForm.getUserId(), memberForm.getPassword(),memberForm.getEmail());
     }

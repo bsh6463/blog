@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +58,7 @@ public class MemberJpaRepository implements MemberRepository {
     }
 
     public void removeById(Long id){
-        em.remove(findMemberById(id));
+        em.remove(findMemberById(id).orElseThrow(NoResultException::new));
     }
 
     public void clear(){

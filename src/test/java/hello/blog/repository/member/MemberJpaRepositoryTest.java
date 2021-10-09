@@ -67,10 +67,10 @@ class MemberJpaRepositoryTest {
     @Test
     void findAllTest(){
         //given, when
-        List<Member> all = jpaRepository.findAll();
+        List<Member> all = jpaRepository.findAll().get();
 
         //then
-        assertThat(all.size()).isEqualTo(4);
+        assertThat(all.size()).isEqualTo(6);
     }
 
     @Test
@@ -88,6 +88,19 @@ class MemberJpaRepositoryTest {
         //then
         assertThat(findMember.getName()).isEqualTo("changedName");
 
+    }
+
+    @Test
+    void deleteTest(){
+        //given
+        Member abc1 = jpaRepository.findMemberByUserId("abc1").get();
+
+        //when
+        jpaRepository.removeById(abc1.getId());
+        List<Member> all = jpaRepository.findAll().get();
+
+        //then
+        assertThat(all.size()).isEqualTo(5);
     }
 
 

@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity @Getter
+@Entity
+@Getter
 @EntityListeners(value = AuditingEntityListener.class)
 public class Member {
 

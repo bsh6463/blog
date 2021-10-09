@@ -54,6 +54,13 @@ public class InitMember {
         comment3.setPost(post2);
         comment3.setMember(member2);
         commentService.saveComment(comment3);
+
+
+        /**
+         * 탈퇴회원
+         */
+        Member withdrawnMember = new Member("탈퇴한 회원", "withdrawnMember", "withdrawnMember", null);
+        memberService.joinMember(withdrawnMember);
     }
 
 
