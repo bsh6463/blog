@@ -21,11 +21,11 @@
         <table class="table" >
             <tr>
                 <td >수정일</td>
-                <td th:text="|마지막 수정일: ${{post.lastModifiedDate}}"|>수정일</td>
+                <td th:text="${{post.lastModifiedDate}}">수정일</td>
             </tr>
             <tr>
                 <td >작성자</td>
-                <td th:text="|작성자: ${post.member.userId}|">수정일</td>
+                <td th:text="${post.member.userId}">수정일</td>
             </tr>
         </table>
         <br>

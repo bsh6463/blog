@@ -46,23 +46,6 @@ public class PostFormController {
         return "post/posts";
     }
 
-    @GetMapping("/search")
-    public String search(@RequestParam("keyword") String keyword, Model model, HttpServletRequest request){
-
-        log.info("keyword: {}", keyword);
-        MemberDto loginMemberDto = getLoginMember(request);
-
-        List<Post> posts = postService.findByTitleContains(keyword);
-        List<PostDto> postsDto = getPostDtos(posts);
-
-        model.addAttribute("member", loginMemberDto);
-        model.addAttribute("posts", postsDto);
-        model.addAttribute("searchForm", new SearchForm(keyword));
-        model.addAttribute("status", status);
-
-        return "post/posts";
-    }
-
     @GetMapping("/{postId}")
     public String post(@PathVariable("postId") Long id, Model model, HttpServletRequest request){
         MemberDto memberDto = getLoginMember(request);
@@ -82,6 +65,23 @@ public class PostFormController {
 
 
         return "post/post";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam("keyword") String keyword, Model model, HttpServletRequest request){
+
+        log.info("keyword: {}", keyword);
+        MemberDto loginMemberDto = getLoginMember(request);
+
+        List<Post> posts = postService.findByTitleContains(keyword);
+        List<PostDto> postsDto = getPostDtos(posts);
+
+        model.addAttribute("member", loginMemberDto);
+        model.addAttribute("posts", postsDto);
+        model.addAttribute("searchForm", new SearchForm(keyword));
+        model.addAttribute("status", status);
+
+        return "post/posts";
     }
 
     @GetMapping("/new/form")

@@ -41,14 +41,13 @@ public class PostJpaRepository implements PostRepository {
     }
 
     @Override
-    public Optional<List<Post>> findByTitleContains(String title) {
-        String query = "%"+title+"%";
+    public Optional<List<Post>> findByTitleContains(String keyword) {
+        String query = "%"+keyword+"%";
         log.info("query: {}", query);
         return Optional.ofNullable(
-                em.createQuery("select p from Post p where p.title like :title", Post.class)
-                .setParameter("title", query)
-                .getResultList()
-        );
+                em.createQuery("select p from Post p where p.title like :keyword", Post.class)
+                .setParameter("keyword", query)
+                .getResultList());
     }
 
 
