@@ -57,15 +57,13 @@ public class CommentController {
         return "redirect:/posts/{postId}";
     }
 
-/*
     @PostMapping("/{commentId}/delete")
-    public String deleteComment(@PathVariable("commentID") Long id, @RequestParam("postId") Long postId, RedirectAttributes redirectAttributes){
+    public String deleteComment(@PathVariable("commentId") Long id, @RequestParam("postId") Long postId, RedirectAttributes redirectAttributes){
         commentService.deleteComment(id);
 
         redirectAttributes.addAttribute("postId", postId);
         return "redirect:/posts/{postId}";
     }
-*/
     public Comment dtoToComment(CommentDto commentDto){
         return new Comment(commentDto.getContent());
     }

@@ -42,7 +42,8 @@
     <tr>
         <th>작성자</th>
         <th>내용</th>
-        <th>수정일자</th>
+        <th>작성일</th>
+        <th>삭제</th>
     </tr>
     </thead>
     <tbody>
@@ -50,8 +51,11 @@
         <td><a href="post.html" th:href="@{/members/{memberId}(memberId=${comment.member.id})}" th:text="${comment.member.userId}">작성자</a></td>
         <td th:text="${comment.content}">댓글 내용</td>
         <td th:text="${{comment.lastModifiedDate}}"></td>
-        <!--button type="button" class="btn-close" aria-label="Close"
-                th:onclick="@{/comments/{commentId}?postId={pstId}(commentId=${comment.id} postId=${post.id})}"></button-->
+        <td>
+            <form th:action="@{/comments/{commentId}/delete?postId={id}(commentId=${comment.id}, id=${post.id})}" th:object="${commentDto}" method="post">
+                <button type="submit" class="btn-close" aria-label="Close"></button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
