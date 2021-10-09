@@ -62,6 +62,15 @@ public class MemberController {
         Member member = memberService.findMemberById(id);
         Member withdrawnMember = memberService.findMemberByUserId("withdrawnMember");
 
+        SetMemberAsWithdrawnMember(member, withdrawnMember);
+
+        memberService.removeMember(id);
+        model.addAttribute("status", "withdrawn");
+
+        return "redirect:/logout";
+    }
+
+    private void SetMemberAsWithdrawnMember(Member member, Member withdrawnMember) {
         List<Comment> comments = member.getComments();
         for (Comment comment : comments) {
             comment.setMember(withdrawnMember);
@@ -71,11 +80,6 @@ public class MemberController {
         for (Post post : posts) {
             post.setMember(withdrawnMember);
         }
-
-        memberService.removeMember(id);
-        model.addAttribute("status", "withdrawn");
-
-        return "redirect:/logout";
     }
 
     public Member formToMember(MemberForm memberForm){
