@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -121,6 +122,43 @@ public class PostFormController {
         postService.deletePost(id);
 
         return "redirect:/posts";
+    }
+
+    @GetMapping("/{postId}/edit")
+    public String editForm(@PathVariable("postId") Long id, HttpServletRequest request, Model model){
+
+        getLoginMemberAndAddToModel(request, model);
+
+        PostDto postDto = postService.findPostById(id).postToDto();
+        model.addAttribute("post", postDto);
+
+        return "post/editform";
+    }
+
+    @PostMapping("/{postId}/edit")
+    public String editPost(@PathVariable("postId") Long id, @ModelAttribute("post") PostDto postDto
+                            ,HttpServletRequest request,Model model, RedirectAttributes redirectAttributes){
+
+        getLoginMemberAndAddToModel(request, model);
+
+        Post post = editPostUsingDto(id, postDto);
+
+        model.addAttribute("post", post.postToDto());
+        redirectAttributes.addAttribute("postID", postDto.getId());
+        return "redirect:/posts/{postId}";
+    }
+
+    private Post editPostUsingDto(Long id, PostDto postDto) {
+        Post post= postService.findPostById(id);
+        post.changeTitle(postDto.getTitle());
+        post.changeContent(postDto.getContent());
+        postService.savePost(post);
+        return post;
+    }
+
+    private void getLoginMemberAndAddToModel(HttpServletRequest request, Model model) {
+        MemberDto loginMember = getLoginMember(request);
+        model.addAttribute("member", loginMember);
     }
 
     private MemberDto getLoginMember(HttpServletRequest request) {

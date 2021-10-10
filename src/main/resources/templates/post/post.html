@@ -56,7 +56,9 @@
                 <button type="submit" class="btn-close" aria-label="Close"></button>
             </form>
         </td>
+
     </tr>
+
     </tbody>
 </table>
 
@@ -71,12 +73,14 @@
 
     </form>
 
-    <form th:action="@{/posts/{postId}/delete(postId=${post.id})}" method="post">
-        <button class="btn btn-secondary float-end"
-                th:onclick="|location.href='@{/posts/{postId}/delete(postId=${post.id})}'|" type="submit">
-            글 삭제
-        </button>
-    </form>
+    <div class="d-grid gap-2 d-md-block">
+        <form th:action="@{/posts/{postId}/delete(postId=${post.id})}" method="post">
+            <button class="btn btn-primary" type="button"  th:onclick="|location.href='@{/posts/{postId}/edit(postId=${post.id})}'|">수정</button>
+            <button class="btn btn-secondary float-end" type="submit" th:onclick="|location.href='@{/posts/{postId}/delete(postId=${post.id})}'|">삭제</button>
+        </form>
+    </div>
+
+
 
 </div>
 

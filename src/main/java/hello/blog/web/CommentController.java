@@ -64,6 +64,7 @@ public class CommentController {
         redirectAttributes.addAttribute("postId", postId);
         return "redirect:/posts/{postId}";
     }
+
     public Comment dtoToComment(CommentDto commentDto){
         return new Comment(commentDto.getContent());
     }

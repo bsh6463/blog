@@ -16,10 +16,10 @@
 
     <div class="container" style="max-width: 600px">
         <h8 class="mb-3" th:text="|로그인: ${member.userId}|">로그인 사용자 이름</h8>
+        <br><br>
+        <h5>글 수정하기</h5>
         <br>
-        <br>
-        <br>
-        <form action="post.html" th:action th:object="${post}" method="post">
+        <form action="post.html" th:action="@{/posts/{postId}/edit(postId=${post.id})}" th:object="${post}" method="post">
             <div class="form-group">
                 <label for="title" class="form-label"><h3>Title</h3></label>
                 <input type="text" class="form-control" th:field="*{title}" name="title" id="title" placeholder="제목을 입력">
