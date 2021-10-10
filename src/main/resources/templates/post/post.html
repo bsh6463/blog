@@ -18,6 +18,7 @@
     <div class="container" style="max-width: 600px">
         <br>
         <h3 th:text="${post.title}">제목</h3>
+        <hr color="black" size="5px">
         <table class="table" >
             <tr>
                 <td >수정일</td>
@@ -30,7 +31,11 @@
         </table>
         <br>
         <h3>내용</h3>
+        <hr color="black" size="5px">
         <div class="well well-lg" th:text="${post.content}">본문내용</div>
+        <br>
+        <br>
+        <br>
         <hr>
     </div>
 
