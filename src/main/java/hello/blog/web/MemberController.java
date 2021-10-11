@@ -10,9 +10,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -22,6 +26,8 @@ import java.util.stream.Collectors;
 public class MemberController {
 
     private final MemberService memberService;
+
+    Map<String, String> errors = new HashMap<>();
 
     @GetMapping
     public String members(Model model){
@@ -48,12 +54,68 @@ public class MemberController {
     }
 
     @PostMapping("/new/form")
-    public String save(@ModelAttribute("member") MemberForm memberForm){
+    public String save(@ModelAttribute("member") MemberForm memberForm, Model model){
+        errors.clear();
+        log.info("member save 로직 시작");
+        log.info("userId : {}", memberForm.getUserId());
+
+        //검증 로직
+        fieldValidation(memberForm, errors, model);
+
+        if(!errors.isEmpty()) {
+
+            log.info("예외발생");
+            log.info("errors : {}", errors);
+            model.addAttribute("errors", errors);
+            return "member/addMemberForm";
+        }
+
+
+        memberJoinAndLogging(memberForm);
+        return "redirect:/";
+    }
+
+
+    private Map<String, String> fieldValidation(MemberForm memberForm, Map<String, String> errors, Model model) {
+        //userId가 null인 경우
+        log.info("검증로직 실행");
+        if(!StringUtils.hasText(memberForm.getUserId()) || memberForm.getUserId().equals("")){
+            //bindingResult.addError(new FieldError("member", "userId", "ID는 필수 입니다."));
+            errors.put("userId", "ID는 필수 입니다.");
+        }
+
+        if(memberService.findMemberByUserId(memberForm.getUserId()) != null){
+            String message = "사용하신 "+ memberForm.getUserId() + " 는(은) 이미 사용된 ID 입니다.";
+            log.info("userId : {}", memberForm.getUserId());
+            errors.put("userId", message);
+        }
+
+        //PW가 null인경우
+        if(!StringUtils.hasText(memberForm.getPassword())){
+            //bindingResult.addError(new FieldError("member", "password", "PW는 필수 입니다."));
+            errors.put("password", "PW는 필수 입니다.");
+        }
+
+
+        //name이 null인 경우
+        if(!StringUtils.hasText(memberForm.getName())){
+            //bindingResult.addError(new FieldError("member", "password", "PW는 필수 입니다."));
+            errors.put("name", "이름은 필수 입니다.");
+        }
+
+        //email이 null인 경우
+        if(!StringUtils.hasText(memberForm.getEmail())){
+            //bindingResult.addError(new FieldError("member", "password", "PW는 필수 입니다."));
+            errors.put("email", "email은 필수 입니다.");
+        }
+
+        return errors;
+    }
+
+    private void memberJoinAndLogging(@ModelAttribute("member") MemberForm memberForm) {
         Member member = memberService.joinMember(formToMember(memberForm));
         log.info("new member.name = {}", member.getName());
         log.info("new member.userId = {}", member.getUserId());
-
-        return "redirect:/";
     }
 
 

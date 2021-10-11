@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +44,16 @@ public class Member {
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
+    //@NotNull
     private String name;
+
+    //@NotNull
     private String userId; //회원이 로그인 시 사용하는 id
+
+    //@NotNull
     private String password;
+
+    //@NotNull
     private String email;
 
 

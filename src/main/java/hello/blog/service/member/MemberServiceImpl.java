@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member findMemberByUserId(String userId) {
 
-        return memberRepository.findMemberByUserId(userId).orElseThrow(NoResultException::new);
+        return memberRepository.findMemberByUserId(userId).orElse(null);
     }
 
     @Override
