@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -83,7 +82,7 @@ public class MemberController {
         log.info("검증로직 실행");
 
         //필수값 검증
-        nullCheck(memberForm, errors);
+        checkNull(memberForm, errors);
 
         //공백 검증
         checkWhiteSpace(memberForm, errors);
@@ -92,12 +91,12 @@ public class MemberController {
         checkSpecialCharacters(memberForm, errors);
 
         //중복 검증
-        overlapCheck(memberForm, errors);
+        checkOverlap(memberForm, errors);
 
         return errors;
     }
 
-    private void nullCheck(MemberForm memberForm, Map<String, String> errors) {
+    private void checkNull(MemberForm memberForm, Map<String, String> errors) {
         //userId가 null인 경우
         if(!StringUtils.hasText(memberForm.getUserId()) || memberForm.getUserId().equals("")){
             //bindingResult.addError(new FieldError("member", "userId", "ID는 필수 입니다."));
@@ -124,7 +123,7 @@ public class MemberController {
         }
     }
 
-    private void overlapCheck(MemberForm memberForm, Map<String, String> errors) {
+    private void checkOverlap(MemberForm memberForm, Map<String, String> errors) {
         if(memberService.findMemberByUserId(memberForm.getUserId()) != null){
             String message = "사용하신 "+ memberForm.getUserId() + " 는(은) 이미 사용된 ID 입니다.";
             log.info("userId : {}", memberForm.getUserId());
