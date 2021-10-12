@@ -43,7 +43,7 @@
       <div th:if="${errors?.containsKey('password')}" th:text="${errors['password']}"
            th:class="${errors?.containsKey('password')} ? 'field-error' : 'form-control'"
            class="field-error" >
-        로그인 Id 오류
+        비밀번호 오류
       </div>
       <br>
     </div>
@@ -55,18 +55,18 @@
       <div th:if="${errors?.containsKey('name')}" th:text="${errors['name']}"
            th:class="${errors?.containsKey('name')} ? 'field-error' : 'form-control'"
            class="field-error" >
-        로그인 Id 오류
+        이름 오류
       </div>
     </div>
     <div>
       <label for="name">email</label>
       <input type="text" id="email" th:field="*{email}"
              th:class="${errors?.containsKey('email')} ? 'field-error form-control' : 'form-control'"
-             class="form-control">
+             class="form-control" placeholder="test@test.com">
       <div th:if="${errors?.containsKey('email')}" th:text="${errors['email']}"
            th:class="${errors?.containsKey('email')} ? 'field-error' : 'form-control'"
            class="field-error" >
-        로그인 Id 오류
+        Email 오류
       </div>
     </div>
     <hr class="my-4">

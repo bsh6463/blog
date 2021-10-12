@@ -19,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class MemberJpaRepositoryTest {
 
-    @Autowired
-    MemberJpaRepository jpaRepository;
+    @Autowired MemberJpaRepository jpaRepository;
 
     @Test
     void saveTest(){

@@ -29,6 +29,8 @@ public class MemberController {
 
     Map<String, String> errors = new HashMap<>();
 
+    String[] specialCharacters = {"!", "#", "$", "%", "^", "&", "*", "(", ")", "=", "+", "/"};
+
     @GetMapping
     public String members(Model model){
         List<Member> members = memberService.findAll();
@@ -77,17 +79,29 @@ public class MemberController {
 
 
     private Map<String, String> fieldValidation(MemberForm memberForm, Map<String, String> errors, Model model) {
-        //userId가 null인 경우
+
         log.info("검증로직 실행");
+
+        //필수값 검증
+        nullCheck(memberForm, errors);
+
+        //공백 검증
+        checkWhiteSpace(memberForm, errors);
+
+        //특수문자 검증
+        checkSpecialCharacters(memberForm, errors);
+
+        //중복 검증
+        overlapCheck(memberForm, errors);
+
+        return errors;
+    }
+
+    private void nullCheck(MemberForm memberForm, Map<String, String> errors) {
+        //userId가 null인 경우
         if(!StringUtils.hasText(memberForm.getUserId()) || memberForm.getUserId().equals("")){
             //bindingResult.addError(new FieldError("member", "userId", "ID는 필수 입니다."));
             errors.put("userId", "ID는 필수 입니다.");
-        }
-
-        if(memberService.findMemberByUserId(memberForm.getUserId()) != null){
-            String message = "사용하신 "+ memberForm.getUserId() + " 는(은) 이미 사용된 ID 입니다.";
-            log.info("userId : {}", memberForm.getUserId());
-            errors.put("userId", message);
         }
 
         //PW가 null인경우
@@ -108,8 +122,63 @@ public class MemberController {
             //bindingResult.addError(new FieldError("member", "password", "PW는 필수 입니다."));
             errors.put("email", "email은 필수 입니다.");
         }
+    }
 
-        return errors;
+    private void overlapCheck(MemberForm memberForm, Map<String, String> errors) {
+        if(memberService.findMemberByUserId(memberForm.getUserId()) != null){
+            String message = "사용하신 "+ memberForm.getUserId() + " 는(은) 이미 사용된 ID 입니다.";
+            log.info("userId : {}", memberForm.getUserId());
+            errors.put("userId", message);
+        }
+    }
+
+    private void checkWhiteSpace(MemberForm memberForm, Map<String, String> errors) {
+        if (StringUtils.containsWhitespace(memberForm.getUserId())){
+            errors.put("userId", "공백을 포함할 수 없습니다.");
+        }
+
+        if (StringUtils.containsWhitespace(memberForm.getName())){
+            errors.put("name", "공백을 포함할 수 없습니다.");
+        }
+
+        if (StringUtils.containsWhitespace(memberForm.getPassword())){
+            errors.put("password", "공백을 포함할 수 없습니다.");
+        }
+
+        if (StringUtils.containsWhitespace(memberForm.getEmail())){
+            errors.put("email", "공백을 포함할 수 없습니다.");
+        }
+    }
+
+    private void checkSpecialCharacters(MemberForm memberForm, Map<String, String> errors) {
+        int cntSc = 0;
+
+        // Email주소 @누락
+        if(!memberForm.getEmail().contains("@")){
+            errors.put("email", "email 형식 오류 : '@'를 포함해야 합니다.");
+        }
+
+        for (String sc : specialCharacters) {
+
+            if(memberForm.getEmail().contains(sc)){
+                errors.put("email", "'!', '#', '$' 등의 특수문자를 포함할 수 없습니다.");
+            }
+
+            if(memberForm.getUserId().contains(sc)){
+                errors.put("userId", "'!', '#', '$' 등의 특수문자를 포함할 수 없습니다.");
+            }
+
+            if(memberForm.getName().contains(sc)){
+                errors.put("name", "'!', '#', '$' 등의 특수문자를 포함할 수 없습니다.");
+            }
+
+            if(!memberForm.getPassword().contains(sc)){
+                ++cntSc;
+                if(cntSc == specialCharacters.length){
+                    errors.put("password", "1개 이상의 특수문자를 포함해야 합니다.");
+                }
+            }
+        }
     }
 
     private void memberJoinAndLogging(@ModelAttribute("member") MemberForm memberForm) {
