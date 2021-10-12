@@ -58,7 +58,7 @@
         <td th:text="${{comment.lastModifiedDate}}"></td>
         <td>
             <form th:action="@{/comments/{commentId}/delete?postId={id}(commentId=${comment.id}, id=${post.id})}" th:object="${commentDto}" method="post">
-                <button type="submit" class="btn-close" aria-label="Close"></button>
+                <button type="submit" class="btn-close" aria-label="Close"  ></button>
             </form>
         </td>
 
@@ -73,7 +73,7 @@
 
         <div class="input-group mb-3; form-group">
             <input type="text" class="form-control" th:field="*{content}" id="commentString" placeholder="댓글 입력" aria-label="Recipient's username" aria-describedby="button-addon2">
-            <button class="btn btn-outline-primary" type="submit" id="button-addon2">입력</button>
+            <button class="btn btn-outline-primary" type="submit" id="button-addon2" th:disabled="${member.userId}=='guest'">입력</button>
         </div>
 
     </form>

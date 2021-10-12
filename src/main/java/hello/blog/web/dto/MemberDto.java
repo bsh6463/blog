@@ -24,6 +24,13 @@ public class MemberDto {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public MemberDto() {
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }

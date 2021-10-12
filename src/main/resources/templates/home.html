@@ -12,20 +12,25 @@
   <hr class="my-4">
     <div class="row">
       <div class="col">
-        <button class="w-100 btn btn-primary btn-lg" type="button"
-                th:onclick="|location.href='@{/members/new/form}'|">
-          회원 가입
-        </button>
-      </div>
-      <p></p>
-      <div class="col">
-        <button class="w-100 btn btn-dark btn-lg"
+        <button class="w-100 btn btn-primary btn-lg"
                 onclick="location.href='loginForm.html'"
                 th:onclick="|location.href='@{/login}'|" type="button">
           로그인
         </button>
       </div>
-    </div>
+      <p></p>
+      <div class="col">
+        <button class="w-100 btn btn-secondary btn-lg" type="button"
+                th:onclick="|location.href='@{/posts}'|">
+          게시판으로 이동
+        </button>
+      </div>
+      <div class="col">
+        <button class="w-100 btn btn-dark btn-lg" type="button"
+                th:onclick="|location.href='@{/members/new/form}'|">
+          회원 가입
+        </button>
+      </div>
 </div> <!-- /container -->
 </body>
 </html>

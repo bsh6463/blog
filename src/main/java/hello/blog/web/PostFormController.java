@@ -30,7 +30,7 @@ public class PostFormController {
     private final PostService postService;
     private final MemberService memberService;
     private final SessionManager sessionManager;
-    private final String status = "search";
+    private String status = "search";
 
     @GetMapping
     public String posts(Model model, HttpServletRequest request) {
@@ -40,16 +40,28 @@ public class PostFormController {
         List<Post> posts = postService.findAll();
         List<PostDto> postsDto = getPostDtos(posts);
 
+        loginMemberDto = checkAndReturnNonLoginGuest(loginMemberDto);
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("posts", postsDto);
         model.addAttribute("searchForm", new SearchForm());
 
+
         return "post/posts";
+    }
+
+    private MemberDto checkAndReturnNonLoginGuest(MemberDto loginMemberDto) {
+        if (loginMemberDto == null){
+            log.info("비 로그인 사용자 접속");
+            loginMemberDto = new MemberDto();
+            loginMemberDto.setUserId("guest");
+        }
+        return loginMemberDto;
     }
 
     @GetMapping("/{postId}")
     public String post(@PathVariable("postId") Long id, Model model, HttpServletRequest request){
-        MemberDto memberDto = getLoginMember(request);
+        MemberDto loginMemberDto = getLoginMember(request);
+
 
         Post post = postService.findPostById(id);
         PostDto postDto = post.postToDto();
@@ -59,10 +71,12 @@ public class PostFormController {
                 .map(comment -> new CommentDto(comment.getId(), comment.getContent(), comment.getMember().memberToDto(),
                         postDto.getId(), comment.getLastModifiedDate())).collect(Collectors.toList());
 
-        model.addAttribute("member", memberDto);
+        loginMemberDto = checkAndReturnNonLoginGuest(loginMemberDto);
+        model.addAttribute("member", loginMemberDto);
         model.addAttribute("post", postDto);
         model.addAttribute("comments", commentDtos);
         model.addAttribute("commentDto", new CommentDto());
+
 
 
         return "post/post";
@@ -77,6 +91,7 @@ public class PostFormController {
         List<Post> posts = postService.findByTitleContains(keyword);
         List<PostDto> postsDto = getPostDtos(posts);
 
+        loginMemberDto = checkAndReturnNonLoginGuest(loginMemberDto);
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("posts", postsDto);
         model.addAttribute("searchForm", new SearchForm(keyword));
@@ -87,11 +102,15 @@ public class PostFormController {
 
     @GetMapping("/new/form")
     public String postForm(Model model, HttpServletRequest request) {
-        MemberDto memberDto = getLoginMember(request);
+        MemberDto loginMemberDto = getLoginMember(request);
+
+        if (loginMemberDto == null){
+            return "redirect:/posts";
+        }
 
         PostDto postDto = new PostDto();
         //postDto.setTitle("TitleTest");
-        model.addAttribute("member", memberDto);
+        model.addAttribute("member", loginMemberDto);
         model.addAttribute("post", postDto);
 
         return "post/addform";
@@ -99,8 +118,13 @@ public class PostFormController {
 
     @PostMapping("/new/form")
     public String addPost(@ModelAttribute("post") PostDto postDto, HttpServletRequest request) {
-        MemberDto memberDto = getLoginMember(request);
-        Member findMember = memberService.findMemberById(memberDto.getId());
+        MemberDto loginMemberDto = getLoginMember(request);
+
+        if (loginMemberDto == null){
+            return "redirect:/posts";
+        }
+
+        Member findMember = memberService.findMemberById(loginMemberDto.getId());
 
         log.info("post1.title : {}", postDto.getTitle());
         log.info("post1.content : {}", postDto.getContent());
@@ -112,13 +136,18 @@ public class PostFormController {
 
         log.info("new post.title = {}", post.getTitle());
         log.info("new post.content = {}", post.getContent());
-        log.info("new post by : {}", memberDto.getUserId());
+        log.info("new post by : {}", loginMemberDto.getUserId());
 
         return "redirect:/posts";
     }
 
     @PostMapping("/{postId}/delete")
-    public String deletePost(@PathVariable("postId") Long id){
+    public String deletePost(@PathVariable("postId") Long id, HttpServletRequest request){
+        MemberDto loginMemberDto = getLoginMember(request);
+        if (loginMemberDto == null){
+            return "redirect:/posts";
+        }
+
         postService.deletePost(id);
 
         return "redirect:/posts";
@@ -126,6 +155,10 @@ public class PostFormController {
 
     @GetMapping("/{postId}/edit")
     public String editForm(@PathVariable("postId") Long id, HttpServletRequest request, Model model){
+        MemberDto loginMemberDto = getLoginMember(request);
+        if (loginMemberDto == null){
+            return "redirect:/posts";
+        }
 
         getLoginMemberAndAddToModel(request, model);
 
@@ -139,10 +172,14 @@ public class PostFormController {
     public String editPost(@PathVariable("postId") Long id, @ModelAttribute("post") PostDto postDto
                             ,HttpServletRequest request,Model model, RedirectAttributes redirectAttributes){
 
-        getLoginMemberAndAddToModel(request, model);
+        MemberDto loginMemberDto = getLoginMember(request);
+        if (loginMemberDto == null){
+            return "redirect:/posts";
+        }
 
         Post post = editPostUsingDto(id, postDto);
 
+        model.addAttribute("member", loginMemberDto);
         model.addAttribute("post", post.postToDto());
         redirectAttributes.addAttribute("postID", postDto.getId());
         return "redirect:/posts/{postId}";
