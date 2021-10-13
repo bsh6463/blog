@@ -24,7 +24,7 @@
             <button class="btn btn-primary float-end"
                     onclick="location.href='addForm.html'"
                     th:onclick="|location.href='@{/posts/new/form}'|"
-                    type="button" th:disabled="${member.userId}=='guest'">게시글 등록</button>
+                    type="button" th:disabled="${member.authority}=='nonAuthorized'">게시글 등록</button>
         </div>
     </div>
     <br>

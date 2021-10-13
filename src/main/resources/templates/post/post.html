@@ -58,7 +58,8 @@
         <td th:text="${{comment.lastModifiedDate}}"></td>
         <td>
             <form th:action="@{/comments/{commentId}/delete?postId={id}(commentId=${comment.id}, id=${post.id})}" th:object="${commentDto}" method="post">
-                <button type="submit" class="btn-close" aria-label="Close"  ></button>
+                <button type="submit" class="btn-close" aria-label="Close"
+                        th:disabled="${member.id} != ${comment.member.id}"></button>
             </form>
         </td>
 
@@ -80,8 +81,12 @@
 
     <div class="d-grid gap-2 d-md-block">
         <form th:action="@{/posts/{postId}/delete(postId=${post.id})}" method="post">
-            <button class="btn btn-primary" type="button"  th:onclick="|location.href='@{/posts/{postId}/edit(postId=${post.id})}'|">수정</button>
-            <button class="btn btn-secondary float-end" type="submit" th:onclick="|location.href='@{/posts/{postId}/delete(postId=${post.id})}'|">삭제</button>
+            <button class="btn btn-primary" type="button"
+                    th:disabled="${member.authority}=='nonAuthorized'"
+                    th:onclick="|location.href='@{/posts/{postId}/edit(postId=${post.id})}'|">수정</button>
+            <button class="btn btn-secondary float-end" type="submit"
+                    th:disabled="${member.authority}=='nonAuthorized'"
+                    th:onclick="|location.href='@{/posts/{postId}/delete(postId=${post.id})}'|">삭제</button>
         </form>
     </div>
 

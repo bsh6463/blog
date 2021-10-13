@@ -2,6 +2,7 @@ package hello.blog.web;
 
 import hello.blog.domain.comment.Comment;
 import hello.blog.domain.member.Member;
+import hello.blog.utils.SpecialCharacter;
 import hello.blog.domain.post.Post;
 import hello.blog.service.member.MemberService;
 import hello.blog.web.dto.MemberDto;
@@ -28,7 +29,7 @@ public class MemberController {
 
     Map<String, String> errors = new HashMap<>();
 
-    String[] specialCharacters = {"!", "#", "$", "%", "^", "&", "*", "(", ")", "=", "+", "/"};
+    String[] specialCharacters = SpecialCharacter.specialCharacters;
 
     @GetMapping
     public String members(Model model){

@@ -20,9 +20,7 @@
         <h2>로그인</h2>
     </div>
     <form action="item.html" th:action th:object="${loginForm}" method="post">
-        <div>
-            <p class="field-error">전체 오류 메시지</p>
-        </div>
+
         <div>
             <label for="loginId">로그인 ID</label>
             <input type="text" id="loginId" th:field="*{loginId}" class="form-control"

@@ -12,6 +12,7 @@ public class MemberDto {
     private String userId;
     private String name;
     private String email;
+    private String authority;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastModifiedDate;
@@ -29,6 +30,10 @@ public class MemberDto {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
