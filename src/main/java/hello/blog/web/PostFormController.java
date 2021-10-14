@@ -134,9 +134,10 @@ public class PostFormController {
     public String deletePost(@PathVariable("postId") Long postId, HttpServletRequest request){
         MemberDto loginMemberDto = getLoginMember(request);
 
-        if (hasNoAuthority(loginMemberDto)) return "redirect:/posts";
-
         PostDto postDto = postService.findPostById(postId).postToDto();
+
+        if (hasNoAuthority(loginMemberDto, postDto)) return "redirect:/posts";
+
 
         postService.deletePost(postId);
 
@@ -147,11 +148,13 @@ public class PostFormController {
     public String editForm(@PathVariable("postId") Long postId, HttpServletRequest request, Model model){
         MemberDto loginMemberDto = getLoginMember(request);
 
-        if (hasNoAuthority(loginMemberDto)) return "redirect:/posts";
+        PostDto postDto = postService.findPostById(postId).postToDto();
+        log.info("authority : {}", loginMemberDto.getAuthority());
+
+        if (hasNoAuthority(loginMemberDto, postDto)) return "redirect:/posts";
 
         getLoginMemberAndAddToModel(request, model);
 
-        PostDto postDto = postService.findPostById(postId).postToDto();
         model.addAttribute("post", postDto);
 
         return "post/editform";
@@ -163,9 +166,10 @@ public class PostFormController {
 
         MemberDto loginMemberDto = getLoginMember(request);
 
-        if (hasNoAuthority(loginMemberDto)) return "redirect:/posts";
+        if (hasNoAuthority(loginMemberDto, postDto)) return "redirect:/posts";
 
         Post post = editPostUsingDto(id, postDto);
+
 
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("post", post.postToDto());
@@ -174,7 +178,15 @@ public class PostFormController {
     }
 
     private boolean hasNoAuthority(MemberDto loginMemberDto) {
-        if (loginMemberDto == null || loginMemberDto.getAuthority().equals(Authority.nonAuthorized)) {
+        if (loginMemberDto == null || loginMemberDto.getAuthority().equals(Authority.guest)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean hasNoAuthority(MemberDto loginMemberDto, PostDto postDto) {
+        if (loginMemberDto == null || loginMemberDto.getAuthority().equals(Authority.guest)
+        || loginMemberDto.getId() != postDto.getMember().getId()) {
             return true;
         }
         return false;
@@ -184,7 +196,8 @@ public class PostFormController {
         if (loginMemberDto == null){
             log.info("비 로그인 사용자 접속");
             loginMemberDto = new MemberDto();
-            loginMemberDto.setUserId(guest);
+            loginMemberDto.setUserId(Authority.guest);
+            loginMemberDto.setAuthority(Authority.guest);
         }
 
         return loginMemberDto;
@@ -194,15 +207,29 @@ public class PostFormController {
     private MemberDto checkAuthorization(Long postId, MemberDto loginMemberDto) {
 
         PostDto postDto = postService.findPostById(postId).postToDto();
+
         if (loginMemberDto == null){
             log.info("비 로그인 사용자 접속");
             loginMemberDto = new MemberDto();
             loginMemberDto.setUserId(guest);
-            loginMemberDto.setAuthority(Authority.nonAuthorized);
+            loginMemberDto.setAuthority(Authority.guest);
+
+            return loginMemberDto;
+
         }else if(!loginMemberDto.getId().equals(postDto.getMember().getId())){
-            loginMemberDto.setAuthority(Authority.nonAuthorized);
+            if(loginMemberDto.getAuthority().equals(Authority.admin)){
+                loginMemberDto.setAuthority(Authority.admin);
+                return loginMemberDto;
+            }
+            loginMemberDto.setAuthority(Authority.commentOnly);
+
+            return loginMemberDto;
+        }else {
+            loginMemberDto.setAuthority(Authority.normal);
+
+            return loginMemberDto;
         }
-        return loginMemberDto;
+
     }
 
     private Post editPostUsingDto(Long id, PostDto postDto) {
@@ -226,6 +253,5 @@ public class PostFormController {
         return posts.stream()
                 .map(post -> new PostDto(post.getId(),post.getTitle(), post.getContent(),post.getMember().memberToDto(),post.getLastModifiedDate())).collect(Collectors.toList());
     }
-
 
 }

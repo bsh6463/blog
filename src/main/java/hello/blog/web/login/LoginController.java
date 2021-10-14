@@ -1,11 +1,13 @@
 package hello.blog.web.login;
 
 import hello.blog.login.LoginService;
+import hello.blog.utils.Authority;
 import hello.blog.web.dto.MemberDto;
 import hello.blog.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +34,7 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("loginForm") LoginForm form,
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm form, Model model,
                         BindingResult bindingResult, HttpServletResponse response){
         if(bindingResult.hasErrors()){
             return "login/loginForm";
@@ -45,6 +47,13 @@ public class LoginController {
         }
 
         //로그인 성공
+        //관리자 확인
+        if(form.getLoginId().equals("admin")){
+            loginMember.setAuthority(Authority.admin);
+        }else {
+            loginMember.setAuthority(Authority.normal);
+        }
+        model.addAttribute("member", loginMember);
         //세션으로 쿠키 처리.
         sessionManager.createSession(loginMember, response);
 

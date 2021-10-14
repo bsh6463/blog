@@ -26,7 +26,10 @@ public class InitMember {
     @Transactional
     public void init(){
 
-        Member member1 = new Member("Admin", "test", "test", "test@naver.com");
+        Member admin = new Member("Admin", "admin", "admin", "admin@naver.com");
+        memberService.joinMember(admin);
+
+        Member member1 = new Member("test", "test", "test", "test@naver.com");
         memberService.joinMember(member1);
 
         Post post1 = new Post("testTitle", "testContent");
