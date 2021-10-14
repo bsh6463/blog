@@ -19,7 +19,7 @@
         <br><br>
         <h5>글 수정하기</h5>
         <br>
-        <form action="post.html" th:action="@{/posts/{postId}/edit(postId=${post.id})}" th:object="${post}" method="post">
+        <form action="post.html" th:action="@{/posts/edit/{postId}(postId=${post.id})}" th:object="${post}" method="post">
             <div class="form-group">
                 <label for="title" class="form-label"><h3>Title</h3></label>
                 <input type="text" class="form-control" th:field="*{title}" name="title" id="title" placeholder="제목을 입력">

@@ -130,7 +130,7 @@ public class PostFormController {
         return "redirect:/posts";
     }
 
-    @PostMapping("/{postId}/delete")
+    @PostMapping("/delete/{postId}")
     public String deletePost(@PathVariable("postId") Long postId, HttpServletRequest request){
         MemberDto loginMemberDto = getLoginMember(request);
 
@@ -144,7 +144,7 @@ public class PostFormController {
         return "redirect:/posts";
     }
 
-    @GetMapping("/{postId}/edit")
+    @GetMapping("/edit/{postId}")
     public String editForm(@PathVariable("postId") Long postId, HttpServletRequest request, Model model){
         MemberDto loginMemberDto = getLoginMember(request);
 
@@ -160,7 +160,7 @@ public class PostFormController {
         return "post/editform";
     }
 
-    @PostMapping("/{postId}/edit")
+    @PostMapping("/edit/{postId}")
     public String editPost(@PathVariable("postId") Long id, @ModelAttribute("post") PostDto postDto
                             ,HttpServletRequest request,Model model, RedirectAttributes redirectAttributes){
 
