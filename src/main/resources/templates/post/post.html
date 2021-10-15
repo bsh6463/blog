@@ -15,6 +15,7 @@
     </div>
     <p></p>
 
+
     <div class="container" style="max-width: 600px">
         <br>
         <h3 th:text="${post.title}">제목</h3>
@@ -40,7 +41,7 @@
     </div>
 
 
-
+    <!--댓글 창-->
 <table class="table" style="max-width: 600px; text-align:center" align="center">
 
     <thead>
@@ -67,6 +68,7 @@
 
     </tbody>
 </table>
+<!--댓글 창 끝-->
 
 
 <div class="container" style="max-width: 600px">
@@ -89,9 +91,6 @@
                     th:onclick="|location.href='@{/posts/{postId}/delete(postId=${post.id})}'|">삭제</button>
         </form>
     </div>
-
-
-
 </div>
 
 

@@ -2,7 +2,6 @@ package hello.blog.service.post;
 
 import hello.blog.domain.post.Post;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,19 +94,29 @@ class PostServiceImplTest {
     }
 
     @Test
-    void findByTitleContainsNoResultTest(){
+    void findByTitleContainsTest(){
         //given
-        String title = "noTitle";
-        System.out.println("===============================");
-        List<Post> noResult = postService.findByTitleContains("noResult");
-        for (Post post : noResult) {
-            System.out.println("post = " + post);
+        String title = "title1";
+
+        //when
+        List<Post> posts = postService.findByTitleContains("title");
+        for (Post post : posts) {
+            System.out.println("===============================");
+            System.out.println("post = " + post.getTitle());
+            System.out.println("===============================");
         }
-        System.out.println("===============================");
 
         //when, then
-        assertThrows(NoResultException.class, () -> postService.findByTitleContains("noResult"));
+        assertThat(posts.size()).isEqualTo(4);
+    }
 
+    @Test
+    void findByTitleContainsTestNoResult(){
+        //given
+        String title = "NoResultPLZ";
+
+        //when
+        assertThrows(NoResultException.class, () -> postService.findByTitleContains(title));
     }
 
 
