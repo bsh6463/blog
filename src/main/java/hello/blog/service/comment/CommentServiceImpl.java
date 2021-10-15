@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> findAll() {
+    public List<Comment> findAll(){
         return commentRepository.findAll().orElseThrow(NoResultException::new);
     }
 

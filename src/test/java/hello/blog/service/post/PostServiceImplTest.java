@@ -2,12 +2,15 @@ package hello.blog.service.post;
 
 import hello.blog.domain.post.Post;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.NoResultException;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,13 +95,21 @@ class PostServiceImplTest {
     }
 
     @Test
-    void clearRepository() {
-        //when
-        postService.clearRepository();
+    void findByTitleContainsNoResultTest(){
+        //given
+        String title = "noTitle";
+        System.out.println("===============================");
+        List<Post> noResult = postService.findByTitleContains("noResult");
+        for (Post post : noResult) {
+            System.out.println("post = " + post);
+        }
+        System.out.println("===============================");
 
-        //then
-        assertThat(postService.findAll().size()).isEqualTo(0);
+        //when, then
+        assertThrows(NoResultException.class, () -> postService.findByTitleContains("noResult"));
+
     }
+
 
     @BeforeEach
     public void beforeEach(){

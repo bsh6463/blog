@@ -69,7 +69,7 @@ class MemberJpaRepositoryTest {
         List<Member> all = jpaRepository.findAll().get();
 
         //then
-        assertThat(all.size()).isEqualTo(6);
+        assertThat(all.size()).isEqualTo(4);
     }
 
     @Test
@@ -99,7 +99,7 @@ class MemberJpaRepositoryTest {
         List<Member> all = jpaRepository.findAll().get();
 
         //then
-        assertThat(all.size()).isEqualTo(5);
+        assertThat(all.size()).isEqualTo(3);
     }
 
 

@@ -36,7 +36,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Member findMemberById(Long memberId) throws NoResultException{
+    public Member findMemberById(Long memberId) {
         Member findMember = memberRepository.findMemberById(memberId).orElseThrow(NoResultException::new);
         return findMember;
     }
@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member findMemberByUserId(String userId) {
 
-        return memberRepository.findMemberByUserId(userId).orElse(null);
+        return memberRepository.findMemberByUserId(userId).orElseThrow(NoResultException::new);
     }
 
     @Override

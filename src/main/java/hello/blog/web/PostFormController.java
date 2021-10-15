@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,7 +78,7 @@ public class PostFormController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam("keyword") String keyword, Model model, HttpServletRequest request){
+    public String search(@RequestParam("keyword") String keyword, Model model, HttpServletRequest request) throws NoResultException {
 
         log.info("keyword: {}", keyword);
         MemberDto loginMemberDto = getLoginMember(request);
@@ -85,7 +86,7 @@ public class PostFormController {
         List<Post> posts = postService.findByTitleContains(keyword);
         List<PostDto> postsDto = getPostDtos(posts);
 
-        checkNonLoginGuest(loginMemberDto);
+        loginMemberDto = checkNonLoginGuest(loginMemberDto);
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("posts", postsDto);
         model.addAttribute("searchForm", new SearchForm(keyword));
