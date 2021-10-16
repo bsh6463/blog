@@ -85,7 +85,6 @@ public class PostFormController {
 
         List<Post> posts = postService.findByTitleContains(keyword);
         List<PostDto> postsDto = getPostDtos(posts);
-
         loginMemberDto = checkNonLoginGuest(loginMemberDto);
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("posts", postsDto);
@@ -93,6 +92,9 @@ public class PostFormController {
         model.addAttribute("status", status);
 
         return "post/posts";
+
+
+
     }
 
     @GetMapping("/new/form")

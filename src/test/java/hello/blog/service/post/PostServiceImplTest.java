@@ -111,14 +111,17 @@ class PostServiceImplTest {
     }
 
     @Test
-    void findByTitleContainsTestNoResult(){
+    void findByTitleContainsTestNoResult() {
         //given
         String title = "NoResultPLZ";
 
         //when
-        assertThrows(NoResultException.class, () -> postService.findByTitleContains(title));
-    }
+        List<Post> results = postService.findByTitleContains(title);
 
+        //then
+        assertThat(results.isEmpty()).isTrue();
+
+    }
 
     @BeforeEach
     public void beforeEach(){
