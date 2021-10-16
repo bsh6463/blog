@@ -66,7 +66,7 @@ class MemberJpaRepositoryTest {
     @Test
     void findAllTest(){
         //given, when
-        List<Member> all = jpaRepository.findAll().get();
+        List<Member> all = jpaRepository.findAll();
 
         //then
         assertThat(all.size()).isEqualTo(4);
@@ -96,7 +96,7 @@ class MemberJpaRepositoryTest {
 
         //when
         jpaRepository.removeById(abc1.getId());
-        List<Member> all = jpaRepository.findAll().get();
+        List<Member> all = jpaRepository.findAll();
 
         //then
         assertThat(all.size()).isEqualTo(3);

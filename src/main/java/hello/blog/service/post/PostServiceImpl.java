@@ -1,5 +1,6 @@
 package hello.blog.service.post;
 
+import hello.blog.domain.member.Member;
 import hello.blog.domain.post.Post;
 import hello.blog.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,28 +24,28 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post findPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(NoResultException::new);
+        return postRepository.findById(id).orElseGet(Post::new);
     }
 
     @Override
     public Post findPostByTitle(String title) {
-        return  postRepository.findByTitle(title).orElseThrow(NoResultException::new);
+        return  postRepository.findByTitle(title).orElseGet(Post::new);
     }
 
     @Override
     public List<Post> findAll() {
-        return postRepository.findAll().orElseThrow(NoResultException::new);
+        return postRepository.findAll();
     }
 
     @Override
     public List<Post> findByTitleContains(String title) {
-        return postRepository.findByTitleContains(title).orElseThrow(NoResultException::new);
+        return postRepository.findByTitleContains(title);
     }
 
     @Override
     @Transactional
     public Post updatePost(Long id, Post postParam) {
-        Post post = postRepository.findById(id).orElseThrow(NoResultException::new);
+        Post post = postRepository.findById(id).orElseGet(Post::new);
         post.changeTitle(postParam.getTitle());
         post.changeContent(postParam.getContent());
         return postRepository.save(post);
@@ -53,7 +54,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public void deletePost(Long id) {
-        Post findPost = postRepository.findById(id).orElseThrow(NoResultException::new);
+        Post findPost = postRepository.findById(id).orElseGet(Post::new);
         postRepository.removePost(findPost);
 
     }

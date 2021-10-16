@@ -27,7 +27,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public List<Member> findAll() {
-        return memberRepository.findAll().orElseThrow(NoResultException::new);
+        return memberRepository.findAll();
     }
 
     @Transactional
@@ -37,19 +37,19 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member findMemberById(Long memberId) {
-        Member findMember = memberRepository.findMemberById(memberId).orElseThrow(NoResultException::new);
+        Member findMember = memberRepository.findMemberById(memberId).orElseGet(Member::new);
         return findMember;
     }
 
     @Override
     public Member findMemberByName(String memberName) {
-        return memberRepository.findMemberByName(memberName).orElseThrow(NoResultException::new);
+        return memberRepository.findMemberByName(memberName).orElseGet(Member::new);
     }
 
     @Override
     public Member findMemberByUserId(String userId) {
 
-        return memberRepository.findMemberByUserId(userId).orElseThrow(NoResultException::new);
+        return memberRepository.findMemberByUserId(userId).orElseGet(Member::new);
     }
 
     @Override

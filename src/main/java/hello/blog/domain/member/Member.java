@@ -96,6 +96,16 @@ public class Member {
         return new MemberDto(this.getId(),this.getUserId(), this.getName(), this.getEmail(), this.getLastModifiedDate());
     }
 
+    public Boolean isEmpty(){
+
+        if(this.getId() == null
+                && this.getUserId() == null
+                && this.getPassword() == null){
+            return true;
+        }
+        return false;
+    }
+
 
 }
 

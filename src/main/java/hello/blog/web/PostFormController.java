@@ -58,6 +58,8 @@ public class PostFormController {
     public String post(@PathVariable("postId") Long postId, Model model, HttpServletRequest request){
 
         Post post = postService.findPostById(postId);
+
+
         PostDto postDto = post.postToDto();
 
         MemberDto loginMemberDto = getLoginMember(request);

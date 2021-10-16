@@ -92,4 +92,15 @@ public class Comment {
     public Comment dtoToComment(CommentDto commentDto){
         return new Comment(commentDto.getContent());
     }
+
+    public Boolean isEmpty(){
+
+        if(this.getId() == null
+            && this.getContent() == null
+            && this.getMember() == null
+            && this.getMember() == null){
+            return true;
+        }
+        return false;
+    }
 }

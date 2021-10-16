@@ -97,4 +97,16 @@ public class Post {
         return new PostDto(this.getId(),this.getTitle(), this.getContent()
                 , this.getMember().memberToDto(), this.getLastModifiedDate());
     }
+
+    public Boolean isEmpty(){
+
+        if(this.getId() == null
+            && this.getComments().size() == 0
+            && this.getMember() == null
+            && this.getTitle() == null) {
+
+            return true;
+        }
+        return false;
+    }
 }

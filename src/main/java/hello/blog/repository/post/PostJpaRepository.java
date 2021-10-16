@@ -34,20 +34,18 @@ public class PostJpaRepository implements PostRepository {
                 .stream().findAny();
     }
 
-    public Optional<List<Post>> findAll(){
-        return Optional.ofNullable(
-                em.createQuery("select p from Post p", Post.class)
-                .getResultList());
+    public List<Post> findAll(){
+        return em.createQuery("select p from Post p", Post.class)
+                .getResultList();
     }
 
     @Override
-    public Optional<List<Post>> findByTitleContains(String keyword) {
+    public List<Post> findByTitleContains(String keyword) {
         String query = "%"+keyword+"%";
         log.info("query: {}", query);
-        return Optional.ofNullable(
-                em.createQuery("select p from Post p where p.title like :keyword", Post.class)
+        return em.createQuery("select p from Post p where p.title like :keyword", Post.class)
                 .setParameter("keyword", query)
-                .getResultList());
+                .getResultList();
     }
 
 

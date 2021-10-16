@@ -31,9 +31,8 @@ public class CommentJpaRepository implements CommentRepository{
 
 
     @Override
-    public Optional<List<Comment>> findAll() {
-        return Optional.ofNullable(
-                em.createQuery("select c from Comment c", Comment.class).getResultList());
+    public List<Comment> findAll() {
+        return em.createQuery("select c from Comment c", Comment.class).getResultList();
     }
 
 

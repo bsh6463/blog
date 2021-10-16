@@ -24,18 +24,18 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public Comment findCommentById(Long id) {
-        return commentRepository.findById(id).orElseThrow(NoResultException::new);
+        return commentRepository.findById(id).orElseGet(Comment::new);
     }
 
     @Override
     public List<Comment> findAll(){
-        return commentRepository.findAll().orElseThrow(NoResultException::new);
+        return commentRepository.findAll();
     }
 
     @Override
     @Transactional
     public Comment updateComment(Long id, Comment updatedPost) {
-        Comment comment = commentRepository.findById(id).orElseThrow(NoResultException::new);
+        Comment comment = findCommentById(id);
         comment.changeContent(updatedPost.getContent());
         return  commentRepository.save(comment);
     }

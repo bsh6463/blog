@@ -10,7 +10,7 @@ public interface CommentRepository {
 
     Comment save(Comment comment);
     Optional<Comment> findById(Long id);
-    Optional<List<Comment>> findAll();
+    List<Comment> findAll();
     void removeComment(Comment comment);
     void clear();
 }

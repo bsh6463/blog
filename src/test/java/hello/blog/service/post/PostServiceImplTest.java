@@ -46,9 +46,18 @@ class PostServiceImplTest {
         assertThat(findPost.getContent()).isEqualTo("content1");
     }
 
+
     @Test
-    void findPostByIdNoResult(){
-        assertThrows(NoResultException.class, () -> postService.findPostById(10000L));
+    void findPostByIdNoResult2(){
+
+        //given
+        Long id = 321321L;
+
+        //when
+        Post postById = postService.findPostById(id);
+
+        //then
+        assertThat(postById.isEmpty()).isTrue();
     }
 
     @Test
@@ -63,7 +72,8 @@ class PostServiceImplTest {
 
     @Test
     void findPostByTitleNoResult(){
-        assertThrows(NoResultException.class, () -> postService.findPostByTitle("noResult"));
+        Post noResult = postService.findPostByTitle("noResult");
+        assertThat(noResult.isEmpty()).isTrue();
     }
 
     @Test

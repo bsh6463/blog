@@ -10,8 +10,8 @@ public interface PostRepository {
     Post save(Post post);
     Optional<Post> findById(Long id);
     Optional<Post> findByTitle(String title);
-    Optional<List<Post>> findAll();
-    Optional<List<Post>> findByTitleContains(String title);
+    List<Post> findAll();
+    List<Post> findByTitleContains(String title);
     void removePost(Post post);
     void clear();
 }
