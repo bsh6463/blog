@@ -168,19 +168,19 @@ public class PostFormController {
     }
 
     @PostMapping("/edit/{postId}")
-    public String editPost(@PathVariable("postId") Long id, @ModelAttribute("post") PostDto postDto
+    public String editPost(@PathVariable("postId") Long id, @ModelAttribute("post") PostDto postForm
                             ,HttpServletRequest request,Model model, RedirectAttributes redirectAttributes){
          log.info("editPost PostMethod 실행");
         MemberDto loginMemberDto = getLoginMember(request);
 
         if (hasNoAuthority(loginMemberDto, id)) return "redirect:/posts";
 
-        Post post = editPostUsingDto(id, postDto);
+        Post post = editPostUsingDto(id, postForm);
 
 
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("post", post.postToDto());
-        redirectAttributes.addAttribute("postID", postDto.getId());
+        redirectAttributes.addAttribute("postID", postForm.getId());
         return "redirect:/posts/{postId}";
     }
 
@@ -205,8 +205,7 @@ public class PostFormController {
 
     private MemberDto checkNonLoginGuest(MemberDto loginMemberDto) {
         if (loginMemberDto == null){
-            log.info("비 로그인 사용자 접속");
-            loginMemberDto = new MemberDto();
+            log.info("비 로그인 사용자 접속");            loginMemberDto = new MemberDto();
             loginMemberDto.setUserId(Authority.guest);
             loginMemberDto.setAuthority(Authority.guest);
         }
