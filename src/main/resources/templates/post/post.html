@@ -85,10 +85,10 @@
         <form th:action="@{/posts/delete/{postId}(postId=${post.id})}" method="post">
             <button class="btn btn-primary" type="button"
                     th:disabled="${member.authority.equals('guest') or member.authority.equals('commentOnly')}"
-                    th:onclick="|location.href='@{/posts/{postId}/edit(postId=${post.id})}'|">수정</button>
+                    th:onclick="|location.href='@{/posts/edit/{postId}(postId=${post.id})}'|">수정</button>
             <button class="btn btn-secondary float-end" type="submit"
                     th:disabled="${member.authority.equals('guest') or member.authority.equals('commentOnly')}"
-                    th:onclick="|location.href='@{/posts/{postId}/delete(postId=${post.id})}'|">삭제</button>
+                    th:onclick="|location.href='@{/posts/delete/{postId}(postId=${post.id})}'|">삭제</button>
         </form>
     </div>
 </div>

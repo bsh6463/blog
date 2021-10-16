@@ -141,8 +141,9 @@ public class PostFormController {
 
         PostDto postDto = postService.findPostById(postId).postToDto();
 
-        if (hasNoAuthority(loginMemberDto, postDto)) return "redirect:/posts";
-
+        if (hasNoAuthority(loginMemberDto, postId)) {
+            return "redirect:/posts";
+        }
 
         postService.deletePost(postId);
 
@@ -156,7 +157,8 @@ public class PostFormController {
         PostDto postDto = postService.findPostById(postId).postToDto();
         log.info("authority : {}", loginMemberDto.getAuthority());
 
-        if (hasNoAuthority(loginMemberDto, postDto)) return "redirect:/posts";
+       if (hasNoAuthority(loginMemberDto, postId)) return "redirect:/posts";
+
 
         getLoginMemberAndAddToModel(request, model);
 
@@ -168,10 +170,10 @@ public class PostFormController {
     @PostMapping("/edit/{postId}")
     public String editPost(@PathVariable("postId") Long id, @ModelAttribute("post") PostDto postDto
                             ,HttpServletRequest request,Model model, RedirectAttributes redirectAttributes){
-
+         log.info("editPost PostMethod 실행");
         MemberDto loginMemberDto = getLoginMember(request);
 
-        if (hasNoAuthority(loginMemberDto, postDto)) return "redirect:/posts";
+        if (hasNoAuthority(loginMemberDto, id)) return "redirect:/posts";
 
         Post post = editPostUsingDto(id, postDto);
 
@@ -189,9 +191,13 @@ public class PostFormController {
         return false;
     }
 
-    private boolean hasNoAuthority(MemberDto loginMemberDto, PostDto postDto) {
+    private boolean hasNoAuthority(MemberDto loginMemberDto, Long postId) {
+
+        log.info("권한 검증");
+        Post post = postService.findPostById(postId);
+
         if (loginMemberDto == null || loginMemberDto.getAuthority().equals(Authority.guest)
-        || loginMemberDto.getId() != postDto.getMember().getId()) {
+        || loginMemberDto.getId() != post.getMember().getId()) {
             return true;
         }
         return false;
@@ -205,6 +211,7 @@ public class PostFormController {
             loginMemberDto.setAuthority(Authority.guest);
         }
 
+        loginMemberDto.setAuthority(Authority.normal);
         return loginMemberDto;
 
     }
