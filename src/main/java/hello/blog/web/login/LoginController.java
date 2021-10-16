@@ -52,6 +52,7 @@ public class LoginController {
         //관리자 확인
         if(form.getLoginId().equals("admin")){
             loginMember.setAuthority(Authority.admin);
+
         }else {
             loginMember.setAuthority(Authority.normal);
         }
@@ -59,6 +60,7 @@ public class LoginController {
         //세션으로 쿠키 처리.
         sessionManager.createSession(loginMember, response);
 
+        log.info("login id: {}", loginMember.getUserId());
         return "redirect:/";
     }
 

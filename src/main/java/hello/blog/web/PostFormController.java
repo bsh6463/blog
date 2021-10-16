@@ -188,6 +188,13 @@ public class PostFormController {
         if (loginMemberDto == null || loginMemberDto.getAuthority().equals(Authority.guest)) {
             return true;
         }
+
+        if(loginMemberDto.getAuthority().equals(Authority.admin)){
+            loginMemberDto.setAuthority(Authority.admin);
+            log.info("authority,관리자 : {}", loginMemberDto.getAuthority());
+            return false;
+        }
+
         return false;
     }
 
@@ -200,19 +207,34 @@ public class PostFormController {
         || loginMemberDto.getId() != post.getMember().getId()) {
             return true;
         }
+
+        //admin 확인
+        if(loginMemberDto.getAuthority().equals(Authority.admin)){
+            log.info("관리자 접속 : {}", loginMemberDto.getAuthority());
+            loginMemberDto.setAuthority(Authority.admin);
+            return false;
+        }
+
         return false;
     }
 
     private MemberDto checkNonLoginGuest(MemberDto loginMemberDto) {
         if (loginMemberDto == null){
-            log.info("비 로그인 사용자 접속");            loginMemberDto = new MemberDto();
+            log.info("비 로그인 사용자 접속");
+            loginMemberDto = new MemberDto();
             loginMemberDto.setUserId(Authority.guest);
             loginMemberDto.setAuthority(Authority.guest);
+
+            return loginMemberDto;
+        }else if(loginMemberDto.getAuthority().equals(Authority.admin)){
+            log.info("관리자 접속");
+            loginMemberDto.setAuthority(Authority.admin);
+            return loginMemberDto;
+        }else {
+            log.info("일반 유저 접속");
+            loginMemberDto.setAuthority(Authority.normal);
+            return loginMemberDto;
         }
-
-        loginMemberDto.setAuthority(Authority.normal);
-        return loginMemberDto;
-
     }
 
     private MemberDto checkAuthorization(Long postId, MemberDto loginMemberDto) {
@@ -229,6 +251,7 @@ public class PostFormController {
 
         }else if(!loginMemberDto.getId().equals(postDto.getMember().getId())){
             if(loginMemberDto.getAuthority().equals(Authority.admin)){
+                log.info("관리자 접속 : {}", loginMemberDto.getAuthority());
                 loginMemberDto.setAuthority(Authority.admin);
                 return loginMemberDto;
             }
@@ -236,6 +259,7 @@ public class PostFormController {
 
             return loginMemberDto;
         }else {
+            log.info("일반 유저 접속");
             loginMemberDto.setAuthority(Authority.normal);
 
             return loginMemberDto;
