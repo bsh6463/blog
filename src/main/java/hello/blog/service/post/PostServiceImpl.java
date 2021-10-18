@@ -60,7 +60,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void clearRepository() {
+    public void clear() {
         postRepository.clear();
     }
 }

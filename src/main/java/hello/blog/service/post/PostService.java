@@ -13,5 +13,5 @@ public interface PostService {
     List<Post> findByTitleContains(String title);
     Post updatePost(Long id, Post updatedPost);
     void deletePost(Long id);
-    void clearRepository();
+    void clear();
 }

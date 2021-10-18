@@ -24,6 +24,6 @@ public interface MemberService {
 
     void removeMember(Long memberId);
 
-    void clearRepository();
+    void clear();
 
 }

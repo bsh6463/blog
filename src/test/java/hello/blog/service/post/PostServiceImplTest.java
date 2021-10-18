@@ -7,12 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.NoResultException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -143,7 +141,7 @@ class PostServiceImplTest {
 
     @AfterEach
     public void clear(){
-        postService.clearRepository();
+        postService.clear();
     }
 
     public Post createPost(){

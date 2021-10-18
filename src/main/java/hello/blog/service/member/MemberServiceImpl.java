@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public void clearRepository() {
+    public void clear() {
         memberRepository.clear();
     }
 
