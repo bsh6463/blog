@@ -1,11 +1,13 @@
 package hello.blog.web.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 @Getter
+@EqualsAndHashCode
 public class MemberDto {
 
     private Long id;
