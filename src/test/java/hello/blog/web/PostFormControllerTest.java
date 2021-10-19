@@ -75,6 +75,58 @@ class PostFormControllerTest {
         assertThat(post.getId()).isEqualTo(post1.getId());
     }
 
+    /**
+     * 비로그인 유저가 글 작성/수정/삭제 시도하는 경우
+     * 로그인 화면으로 이동됨 by inteceptor
+     */
+    @Test
+    void 비로그인_글작성_시도_GET() throws Exception {
+
+        String redirectUtl = "/login?redirectURL=/posts/new/form";
+
+        mockMvc.perform(get("/posts/new/form"))
+                .andExpect(redirectedUrl(redirectUtl));
+    }
+
+    @Test
+    void 비로그인_글작성_시도_POST() throws Exception {
+
+        String redirectUtl = "/login?redirectURL=/posts/new/form";
+
+        mockMvc.perform(post("/posts/new/form"))
+                .andExpect(redirectedUrl(redirectUtl));
+    }
+
+
+    @Test
+    void 비로그인_글삭제_시도() throws Exception {
+
+        Post post1 = postService.findPostByTitle("test1");
+
+        String redirectUrl = "/login?redirectURL=/posts/delete/"+post1.getId();
+        mockMvc.perform(post("/posts/delete/{id}", post1.getId()))
+                .andExpect(redirectedUrl(redirectUrl));
+    }
+
+
+    @Test
+    void 비로그인_글수정_시도_GET() throws Exception {
+        Post post1 = postService.findPostByTitle("test1");
+        String redirectUrl = "/login?redirectURL=/posts/edit/"+post1.getId();
+        mockMvc.perform(get("/posts/edit/{id}", post1.getId()))
+                .andExpect(redirectedUrl(redirectUrl));
+    }
+
+
+    @Test
+    void 비로그인_글수정_시도_POST() throws Exception {
+        Post post1 = postService.findPostByTitle("test1");
+        String redirectUrl = "/login?redirectURL=/posts/edit/"+post1.getId();
+        mockMvc.perform(post("/posts/edit/{id}", post1.getId()))
+                .andExpect(redirectedUrl(redirectUrl));
+    }
+
+
     @Test
     void 로그인_글목록() throws Exception {
 
