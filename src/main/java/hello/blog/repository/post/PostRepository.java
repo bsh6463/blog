@@ -11,6 +11,7 @@ public interface PostRepository {
     Optional<Post> findById(Long id);
     Optional<Post> findByTitle(String title);
     List<Post> findAll();
+    List<Post> findAllPaging(int offset, int limit);
     List<Post> findByTitleContains(String title);
     void removePost(Post post);
     void clear();

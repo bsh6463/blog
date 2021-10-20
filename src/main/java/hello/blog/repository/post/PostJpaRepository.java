@@ -3,6 +3,8 @@ package hello.blog.repository.post;
 import hello.blog.domain.post.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -36,6 +38,13 @@ public class PostJpaRepository implements PostRepository {
 
     public List<Post> findAll(){
         return em.createQuery("select p from Post p", Post.class)
+                .getResultList();
+    }
+
+   public List<Post> findAllPaging(int offset, int limit){
+        return em.createQuery("select p from Post p order by p.id asc", Post.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
     }
 

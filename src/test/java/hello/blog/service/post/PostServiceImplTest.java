@@ -1,6 +1,7 @@
 package hello.blog.service.post;
 
 import hello.blog.domain.post.Post;
+import hello.blog.service.paging.Page;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -129,6 +130,18 @@ class PostServiceImplTest {
         //then
         assertThat(results.isEmpty()).isTrue();
 
+    }
+    
+    @Test
+    void findAllPageTest(){
+        Page page = postService.findAllPaging(0, 2);
+        List<List<Post>> pages = page.getPages();
+
+        for (List<Post> posts : pages) {
+            System.out.println("posts.toString() = " + posts.toString());
+        }
+        assertThat(page.getPages().size()).isEqualTo(2);
+        
     }
 
     @BeforeEach

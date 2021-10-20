@@ -3,6 +3,7 @@ package hello.blog.service.post;
 import hello.blog.domain.member.Member;
 import hello.blog.domain.post.Post;
 import hello.blog.repository.post.PostRepository;
+import hello.blog.service.paging.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,28 @@ public class PostServiceImpl implements PostService{
     public List<Post> findAll() {
         return postRepository.findAll();
     }
+
+    @Override
+    public Page findAllPaging(int offset, int limit) {
+        int size = findAll().size();
+        int cnt = size/limit;
+
+        if(size%limit != 0){
+            cnt++;
+        }
+
+        Page page = new Page();
+
+        for (int i=0;i<cnt; i++){
+            List<Post> results = postRepository.findAllPaging(offset, limit);
+            page.getPages().add(results);
+
+            offset = offset+limit;
+        }
+
+        return page;
+    }
+
 
     @Override
     public List<Post> findByTitleContains(String title) {
