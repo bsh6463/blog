@@ -26,8 +26,10 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         if (loginMember == null){
             log.info("비로그인 자용자 접속 시도");
 
-            response.sendRedirect("/login?redirectURL="+requestURI);
-            return false;
+            throw new IllegalAccessException("비정상적인 접근입니다.");
+            //response.sendRedirect("/login?redirectURL="+requestURI);
+
+            //return false;
         }else {
             log.info("login 인증 체크 interceptor 성공");
             return true;

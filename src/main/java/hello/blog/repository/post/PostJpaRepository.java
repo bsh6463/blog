@@ -42,7 +42,7 @@ public class PostJpaRepository implements PostRepository {
     }
 
    public List<Post> findAllPaging(int offset, int limit){
-        return em.createQuery("select p from Post p order by p.id asc", Post.class)
+        return em.createQuery("select p from Post p order by p.id desc ", Post.class)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
@@ -61,7 +61,7 @@ public class PostJpaRepository implements PostRepository {
     public List<Post> findByTitleContainsPaging(String keyword, int offset, int limit) {
         String query = "%"+keyword+"%";
         log.info("query: {}", query);
-        return em.createQuery("select p from Post p where p.title like :keyword", Post.class)
+        return em.createQuery("select p from Post p where p.title like :keyword order by p.id desc ", Post.class)
                 .setParameter("keyword", query)
                 .setFirstResult(offset)
                 .setMaxResults(limit)

@@ -76,7 +76,7 @@ public class PostFormController {
         if (page == null){
             page = 1;
         }else if (page <= 0 ){
-            throw new IllegalArgumentException("page 번호는 음수일 수 없음");
+            throw new IllegalArgumentException("page 번호는 양수입니다.");
         }else if (page > numberOfPages){
             throw new IllegalArgumentException("존재하지 않는 페이지 입니다.");
         }
@@ -187,10 +187,13 @@ public class PostFormController {
     }
 
     @GetMapping("/new/form")
-    public String postForm(Model model, HttpServletRequest request) {
+    public String postForm(Model model, HttpServletRequest request) throws IllegalAccessException {
         MemberDto loginMemberDto = getLoginMember(request);
 
-        if (hasNoAuthority(loginMemberDto)) return "redirect:/posts";
+        if (hasNoAuthority(loginMemberDto)) {
+            throw new IllegalAccessException("비정상적인 접근입니다.");
+           // return "redirect:/posts";
+        }
 
         PostDto postDto = new PostDto();
         model.addAttribute("member", loginMemberDto);
@@ -200,10 +203,13 @@ public class PostFormController {
     }
 
     @PostMapping("/new/form")
-    public String addPost(@ModelAttribute("post") PostDto postDto, HttpServletRequest request) {
+    public String addPost(@ModelAttribute("post") PostDto postDto, HttpServletRequest request) throws IllegalAccessException {
         MemberDto loginMemberDto = getLoginMember(request);
 
-        if (hasNoAuthority(loginMemberDto)) return "redirect:/posts";
+        if (hasNoAuthority(loginMemberDto)) {
+            throw new IllegalAccessException("비정상적인 접근입니다.");
+            //return "redirect:/posts";
+        }
 
         Member findMember = memberService.findMemberById(loginMemberDto.getId());
 
@@ -225,13 +231,14 @@ public class PostFormController {
     }
 
     @PostMapping("/delete/{postId}")
-    public String deletePost(@PathVariable("postId") Long postId, HttpServletRequest request){
+    public String deletePost(@PathVariable("postId") Long postId, HttpServletRequest request) throws IllegalAccessException {
         MemberDto loginMemberDto = getLoginMember(request);
 
         PostDto postDto = postService.findPostById(postId).postToDto();
 
         if (hasNoAuthority(loginMemberDto, postId)) {
-            return "redirect:/posts";
+            throw new IllegalAccessException("비정상적인 접근입니다.");
+            //return "redirect:/posts";
         }
 
         postService.deletePost(postId);
@@ -240,13 +247,16 @@ public class PostFormController {
     }
 
     @GetMapping("/edit/{postId}")
-    public String editForm(@PathVariable("postId") Long postId, HttpServletRequest request, Model model){
+    public String editForm(@PathVariable("postId") Long postId, HttpServletRequest request, Model model) throws IllegalAccessException {
         MemberDto loginMemberDto = getLoginMember(request);
 
         PostDto postDto = postService.findPostById(postId).postToDto();
         log.info("authority : {}", loginMemberDto.getAuthority());
 
-       if (hasNoAuthority(loginMemberDto, postId)) return "redirect:/posts";
+       if (hasNoAuthority(loginMemberDto, postId)) {
+           throw new IllegalAccessException("비정상적인 접근입니다.");
+           //return "redirect:/posts";
+           }
 
 
         getLoginMemberAndAddToModel(request, model);
@@ -258,11 +268,14 @@ public class PostFormController {
 
     @PostMapping("/edit/{postId}")
     public String editPost(@PathVariable("postId") Long id, @ModelAttribute("post") PostDto postForm
-                            ,HttpServletRequest request,Model model, RedirectAttributes redirectAttributes){
+                            ,HttpServletRequest request,Model model, RedirectAttributes redirectAttributes) throws IllegalAccessException {
          log.info("editPost PostMethod 실행");
         MemberDto loginMemberDto = getLoginMember(request);
 
-        if (hasNoAuthority(loginMemberDto, id)) return "redirect:/posts";
+        if (hasNoAuthority(loginMemberDto, id)) {
+            throw new IllegalAccessException("비정상적인 접근입니다.");
+            //return "redirect:/posts";
+        }
 
         Post post = editPostUsingDto(id, postForm);
 

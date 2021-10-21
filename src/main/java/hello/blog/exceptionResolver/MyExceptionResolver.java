@@ -19,6 +19,11 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return new ModelAndView();
         }
+        else if (ex instanceof IllegalAccessException){
+            log.info("Resolve IllegalAccessException as 400");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return new ModelAndView();
+        }
 
         return null;
     }

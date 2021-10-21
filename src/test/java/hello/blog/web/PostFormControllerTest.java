@@ -75,26 +75,18 @@ class PostFormControllerTest {
         assertThat(post.getId()).isEqualTo(post1.getId());
     }
 
-    /**
-     * 비로그인 유저가 글 작성/수정/삭제 시도하는 경우
-     * 로그인 화면으로 이동됨 by inteceptor
-     */
     @Test
     void 비로그인_글작성_시도_GET() throws Exception {
 
-        String redirectUtl = "/login?redirectURL=/posts/new/form";
-
         mockMvc.perform(get("/posts/new/form"))
-                .andExpect(redirectedUrl(redirectUtl));
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     void 비로그인_글작성_시도_POST() throws Exception {
 
-        String redirectUtl = "/login?redirectURL=/posts/new/form";
-
         mockMvc.perform(post("/posts/new/form"))
-                .andExpect(redirectedUrl(redirectUtl));
+                .andExpect(status().is4xxClientError());
     }
 
 
@@ -105,25 +97,25 @@ class PostFormControllerTest {
 
         String redirectUrl = "/login?redirectURL=/posts/delete/"+post1.getId();
         mockMvc.perform(post("/posts/delete/{id}", post1.getId()))
-                .andExpect(redirectedUrl(redirectUrl));
+                .andExpect(status().is4xxClientError());
     }
 
 
     @Test
     void 비로그인_글수정_시도_GET() throws Exception {
         Post post1 = postService.findPostByTitle("test1");
-        String redirectUrl = "/login?redirectURL=/posts/edit/"+post1.getId();
+
         mockMvc.perform(get("/posts/edit/{id}", post1.getId()))
-                .andExpect(redirectedUrl(redirectUrl));
+                .andExpect(status().is4xxClientError());
     }
 
 
     @Test
     void 비로그인_글수정_시도_POST() throws Exception {
         Post post1 = postService.findPostByTitle("test1");
-        String redirectUrl = "/login?redirectURL=/posts/edit/"+post1.getId();
+
         mockMvc.perform(post("/posts/edit/{id}", post1.getId()))
-                .andExpect(redirectedUrl(redirectUrl));
+                .andExpect(status().is4xxClientError());
     }
 
 
@@ -190,6 +182,25 @@ class PostFormControllerTest {
          */
         CheckLoginMember(member, mav);
 
+    }
+
+
+    @Test
+    void 음수_페이지_번호() throws Exception {
+        mockMvc.perform(
+                get("/posts?page=-1"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 양수_범위_벗어난_페이지_번호() throws Exception {
+        /**
+         * 테스트 데이터 2, 한 페이지 10개 출력.
+         * 페이지 수는 1
+         */
+        mockMvc.perform(
+                get("/posts?page=10"))
+                .andExpect(status().is4xxClientError());
     }
 
 
