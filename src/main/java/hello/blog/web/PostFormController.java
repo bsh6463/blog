@@ -14,13 +14,16 @@ import hello.blog.web.dto.SearchForm;
 import hello.blog.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,11 +36,22 @@ public class PostFormController {
     private final PostService postService;
     private final MemberService memberService;
     private final SessionManager sessionManager;
-    private String status = SearchStatus.status;
+    private String searchStatus = SearchStatus.statusSearch;
     private String guest = Authority.guest;
+    private int offset = 0;
+    private int limit = 10;
+    private int totalSize;
+    private int totalSizeSearch;
+    private int numberOfPages;
+    private int numberOfSearchPages;
 
+    @PostConstruct
+    public void init(){
+       totalSize = postService.findAll().size();
+        numberOfPages = getNumberOfPages();
+    }
 
-    @GetMapping
+    //@GetMapping
     public String posts(Model model, HttpServletRequest request) {
 
         MemberDto loginMemberDto = getLoginMember(request);
@@ -49,6 +63,34 @@ public class PostFormController {
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("posts", postsDto);
         model.addAttribute("searchForm", new SearchForm());
+
+
+        return "post/posts";
+    }
+
+    @GetMapping
+    public String pages(@RequestParam("page") @Nullable Integer page, Model model, HttpServletRequest request, HttpServletResponse response) {
+
+        MemberDto loginMemberDto = getLoginMember(request);
+
+        if (page == null){
+            page = 1;
+        }else if (page <= 0 ){
+            throw new IllegalArgumentException("page 번호는 음수일 수 없음");
+        }else if (page > numberOfPages){
+            throw new IllegalArgumentException("존재하지 않는 페이지 입니다.");
+        }
+
+        List<Post> posts = postService.findAllPaging(offset + (page - 1) * limit, limit);
+        List<PostDto> postsDto = getPostDtos(posts);
+
+        loginMemberDto = checkNonLoginGuest(loginMemberDto);
+
+        model.addAttribute("member", loginMemberDto);
+        model.addAttribute("posts", postsDto);
+        model.addAttribute("numberOfPages", numberOfPages);
+        model.addAttribute("searchForm", new SearchForm());
+        model.addAttribute("status", SearchStatus.statusNormal);
 
 
         return "post/posts";
@@ -76,10 +118,55 @@ public class PostFormController {
         model.addAttribute("comments", commentDtos);
         model.addAttribute("commentDto", new CommentDto());
 
+
+
         return "post/post";
     }
 
     @GetMapping("/search")
+    public String searchPaging(@RequestParam("keyword") String keyword, @RequestParam("page") @Nullable Integer page,
+                               Model model, HttpServletRequest request) throws NoResultException {
+
+        if (page == null){
+            page = 1;
+        }else if (page <= 0 ){
+            throw new IllegalArgumentException("page 번호는 음수일 수 없음");
+        }else if (page > numberOfPages){
+            throw new IllegalArgumentException("존재하지 않는 페이지 입니다.");
+        }
+
+        log.info("keyword: {}", keyword);
+        MemberDto loginMemberDto = getLoginMember(request);
+
+        //전체 size구하기 위해서 쿼리를 한번 더 날리는게 마음에 안듦..
+        totalSizeSearch = postService.findByTitleContains(keyword).size();
+        List<Post> posts = postService.findByTitleContainsPaging(keyword,offset + (page - 1) * limit, limit);
+        List<PostDto> postsDto = getPostDtos(posts);
+
+
+        numberOfSearchPages = totalSizeSearch/limit;
+
+        if(numberOfSearchPages == 0){
+            numberOfSearchPages=1;
+        }else {
+            if (totalSizeSearch%limit != 0){
+                numberOfSearchPages++;
+            }
+        }
+
+        log.info("number of pages : {}", numberOfSearchPages);
+        loginMemberDto = checkNonLoginGuest(loginMemberDto);
+        model.addAttribute("member", loginMemberDto);
+        model.addAttribute("posts", postsDto);
+        model.addAttribute("searchForm", new SearchForm(keyword));
+        model.addAttribute("status", searchStatus);
+        model.addAttribute("numberOfPages", numberOfSearchPages);
+
+        return "post/posts";
+
+    }
+
+    //@GetMapping("/search")
     public String search(@RequestParam("keyword") String keyword, Model model, HttpServletRequest request) throws NoResultException {
 
         log.info("keyword: {}", keyword);
@@ -87,15 +174,15 @@ public class PostFormController {
 
         List<Post> posts = postService.findByTitleContains(keyword);
         List<PostDto> postsDto = getPostDtos(posts);
+
         loginMemberDto = checkNonLoginGuest(loginMemberDto);
+
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("posts", postsDto);
         model.addAttribute("searchForm", new SearchForm(keyword));
-        model.addAttribute("status", status);
+        model.addAttribute("status", searchStatus);
 
         return "post/posts";
-
-
 
     }
 
@@ -131,6 +218,8 @@ public class PostFormController {
         log.info("new post.title = {}", post.getTitle());
         log.info("new post.content = {}", post.getContent());
         log.info("new post by : {}", loginMemberDto.getUserId());
+
+        init();
 
         return "redirect:/posts";
     }
@@ -182,6 +271,20 @@ public class PostFormController {
         model.addAttribute("post", post.postToDto());
         redirectAttributes.addAttribute("postID", postForm.getId());
         return "redirect:/posts/{postId}";
+    }
+
+    private int getNumberOfPages() {
+
+        int numberOfPages = totalSize/limit;
+
+        if(numberOfPages == 0){
+            numberOfPages = 1;
+        }else {
+            if (totalSize%limit != 0){
+                numberOfPages++;
+            }
+        }
+        return numberOfPages;
     }
 
     private boolean hasNoAuthority(MemberDto loginMemberDto) {

@@ -1,4 +1,4 @@
-package hello.blog;
+package hello.blog.configuration;
 
 import hello.blog.web.interceptor.LoginCheckInterceptor;
 import hello.blog.web.session.SessionManager;
@@ -7,9 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
 @Configuration
 @RequiredArgsConstructor
-public class WebConfig implements WebMvcConfigurer {
+public class InterceptorConfig implements WebMvcConfigurer{
 
     private final SessionManager sessionManager;
 
@@ -23,4 +24,6 @@ public class WebConfig implements WebMvcConfigurer {
                         "/", "/members/new/form", "/posts", "/posts/*",
                         "/login", "/logout");
     }
+
+
 }

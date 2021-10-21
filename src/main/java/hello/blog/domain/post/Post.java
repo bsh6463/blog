@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity @Getter
 @EntityListeners(value = AuditingEntityListener.class)
@@ -97,6 +98,7 @@ public class Post {
         return new PostDto(this.getId(),this.getTitle(), this.getContent()
                 , this.getMember().memberToDto(), this.getLastModifiedDate());
     }
+
 
     public Boolean isEmpty(){
 

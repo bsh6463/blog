@@ -13,6 +13,7 @@ public interface PostRepository {
     List<Post> findAll();
     List<Post> findAllPaging(int offset, int limit);
     List<Post> findByTitleContains(String title);
+    List<Post> findByTitleContainsPaging(String title, int offset, int limit);
     void removePost(Post post);
     void clear();
 }

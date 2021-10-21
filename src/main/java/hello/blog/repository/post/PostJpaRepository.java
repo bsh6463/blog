@@ -57,6 +57,17 @@ public class PostJpaRepository implements PostRepository {
                 .getResultList();
     }
 
+    @Override
+    public List<Post> findByTitleContainsPaging(String keyword, int offset, int limit) {
+        String query = "%"+keyword+"%";
+        log.info("query: {}", query);
+        return em.createQuery("select p from Post p where p.title like :keyword", Post.class)
+                .setParameter("keyword", query)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
 
     public void removePost(Post post){
         em.remove(post);

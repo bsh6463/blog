@@ -1,7 +1,6 @@
 package hello.blog.service.post;
 
 import hello.blog.domain.post.Post;
-import hello.blog.service.paging.Page;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,7 +98,7 @@ class PostServiceImplTest {
         postService.deletePost(post.getId());
 
         //then
-        assertThat(postService.findAll().size()).isEqualTo(3);
+        assertThat(postService.findAll().size()).isEqualTo(6);
     }
 
     @Test
@@ -116,7 +115,7 @@ class PostServiceImplTest {
         }
 
         //when, then
-        assertThat(posts.size()).isEqualTo(4);
+        assertThat(posts.size()).isEqualTo(7);
     }
 
     @Test
@@ -132,17 +131,22 @@ class PostServiceImplTest {
 
     }
     
-    @Test
+   /* @Test
     void findAllPageTest(){
         Page page = postService.findAllPaging(0, 2);
         List<List<Post>> pages = page.getPages();
 
         for (List<Post> posts : pages) {
-            System.out.println("posts.toString() = " + posts.toString());
+            System.out.println("===================");
+            for (Post post : posts) {
+                System.out.println("post title : " + post.getTitle());
+            }
+            System.out.println("===================");
         }
-        assertThat(page.getPages().size()).isEqualTo(2);
-        
-    }
+        assertThat(page.getPages().size()).isEqualTo(4);
+        assertThat(page.getPages().get(0).get(0).getTitle()).isEqualTo("title1");
+
+    }*/
 
     @BeforeEach
     public void beforeEach(){
@@ -150,6 +154,9 @@ class PostServiceImplTest {
         postService.savePost(new Post("title2", "content2"));
         postService.savePost(new Post("title3", "content3"));
         postService.savePost(new Post("title4", "content4"));
+        postService.savePost(new Post("title5", "content5"));
+        postService.savePost(new Post("title6", "content6"));
+        postService.savePost(new Post("title7", "content7"));
     }
 
     @AfterEach

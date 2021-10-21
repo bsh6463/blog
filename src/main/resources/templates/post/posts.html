@@ -57,6 +57,17 @@
             </tbody>
         </table>
     </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li th:if="${status}!='search'"
+                th:each = "n: ${#numbers.sequence(1,numberOfPages)}" class="page-item">
+                <a class="page-link" th:href="@{|/posts?page=${n}|}" th:text="${n}">일반 페이지번호</a></li>
+
+            <li th:if="${status}=='search'"
+                th:each = "n: ${#numbers.sequence(1,numberOfPages)}" class="page-item">
+                <a class="page-link" th:href="@{|/posts/search?keyword=${searchForm.keyword}&page=${n}|}" th:text="${n}">검색시 페이지번호</a></li>
+        </ul>
+    </nav>
 
 </div> <!-- /container -->
 

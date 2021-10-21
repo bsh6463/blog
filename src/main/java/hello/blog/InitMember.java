@@ -54,10 +54,17 @@ public class InitMember {
         comment2.setMember(member2);
         commentService.saveComment(comment2);
 
-        Comment comment3 = new Comment("testComment3");
-        comment3.setPost(post2);
-        comment3.setMember(member2);
-        commentService.saveComment(comment3);
+
+        for (int i =3;i <= 30; i++){
+            Post post = new Post("testTitle"+i, "testContent"+i);
+            post.setMember(member1);
+            postService.savePost(post);
+
+            Comment comment = new Comment("testComment"+i);
+            comment.setPost(post);
+            comment.setMember(member1);
+            commentService.saveComment(comment);
+        }
 
 
         /**
