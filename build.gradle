@@ -39,3 +39,10 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    enabled = false
+    manifest {
+        attributes('Main-Class': 'hello.blog.BlogApplication')
+    }
+}
