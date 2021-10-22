@@ -2,9 +2,12 @@ spring:
   profiles:
     active: local
   datasource:
-    url: jdbc:mysql://localhost:3306/blog
-    username: root
-    password: bae94116125!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://be5fd3954d7f2f:d982de54@us-cdbr-east-04.cleardb.com/heroku_0d6cd585817159b?reconnect=true
+    username: be5fd3954d7f2f
+    password: d982de54
+
+
 
 
   jpa:
