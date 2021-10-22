@@ -46,9 +46,11 @@ public class PostFormController {
     private int numberOfSearchPages;
 
     @PostConstruct
-    public void init(){
+    public int init(){
        totalSize = postService.findAll().size();
         numberOfPages = getNumberOfPages();
+
+        return numberOfPages;
     }
 
     //@GetMapping
@@ -203,7 +205,8 @@ public class PostFormController {
     }
 
     @PostMapping("/new/form")
-    public String addPost(@ModelAttribute("post") PostDto postDto, HttpServletRequest request) throws IllegalAccessException {
+    public String addPost(@ModelAttribute("post") PostDto postDto, HttpServletRequest request
+                            , Model model) throws IllegalAccessException {
         MemberDto loginMemberDto = getLoginMember(request);
 
         if (hasNoAuthority(loginMemberDto)) {
@@ -225,13 +228,14 @@ public class PostFormController {
         log.info("new post.content = {}", post.getContent());
         log.info("new post by : {}", loginMemberDto.getUserId());
 
-        init();
+        changeNumberOfPages(model);
 
         return "redirect:/posts";
     }
 
     @PostMapping("/delete/{postId}")
-    public String deletePost(@PathVariable("postId") Long postId, HttpServletRequest request) throws IllegalAccessException {
+    public String deletePost(@PathVariable("postId") Long postId, HttpServletRequest request
+                            , Model model) throws IllegalAccessException {
         MemberDto loginMemberDto = getLoginMember(request);
 
         PostDto postDto = postService.findPostById(postId).postToDto();
@@ -242,8 +246,14 @@ public class PostFormController {
         }
 
         postService.deletePost(postId);
+        changeNumberOfPages(model);
 
         return "redirect:/posts";
+    }
+
+    private void changeNumberOfPages(Model model) {
+        numberOfPages = init();
+        model.addAttribute("numberOfPages", numberOfPages);
     }
 
     @GetMapping("/edit/{postId}")
