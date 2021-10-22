@@ -125,7 +125,8 @@ public class MemberController {
     }
 
     private void checkOverlap(MemberForm memberForm, Map<String, String> errors) {
-        if(memberService.findMemberByUserId(memberForm.getUserId()) != null){
+
+        if(!memberService.findMemberByUserId(memberForm.getUserId()).isEmpty()){
             String message = "사용하신 "+ memberForm.getUserId() + " 는(은) 이미 사용된 ID 입니다.";
             log.info("userId : {}", memberForm.getUserId());
             errors.put("userId", message);

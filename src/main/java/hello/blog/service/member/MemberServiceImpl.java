@@ -1,14 +1,11 @@
 package hello.blog.service.member;
 
 import hello.blog.domain.member.Member;
-import hello.blog.repository.member.MemberJpaRepository;
 import hello.blog.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
 import java.util.List;
 
 

@@ -14,16 +14,16 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity @Getter
 @EntityListeners(value = AuditingEntityListener.class)
 public class Post {
 
-    @Id @GeneratedValue
-    @Column(name = "POST_ID")
-    private Long id;
 
+    @Id
+    @Column(name = "POST_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     /**
      * em.persist()전에 호출됨.
      */

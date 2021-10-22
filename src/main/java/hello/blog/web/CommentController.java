@@ -8,7 +8,6 @@ import hello.blog.service.member.MemberService;
 import hello.blog.service.post.PostService;
 import hello.blog.web.dto.CommentDto;
 import hello.blog.web.dto.MemberDto;
-import hello.blog.web.dto.PostDto;
 import hello.blog.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

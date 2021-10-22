@@ -7,7 +7,6 @@ import hello.blog.service.post.PostService;
 import hello.blog.utils.Authority;
 import hello.blog.web.dto.MemberDto;
 import hello.blog.web.dto.PostDto;
-import hello.blog.web.login.LoginController;
 import hello.blog.web.session.SessionManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -4,7 +4,6 @@ import hello.blog.domain.member.Member;
 import hello.blog.domain.post.Post;
 import hello.blog.web.dto.CommentDto;
 import lombok.Getter;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,7 +20,7 @@ import java.util.List;
 public class Comment {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COMMENT_ID")
     private Long id;
 

@@ -321,16 +321,22 @@ public class PostFormController {
 
         if (loginMemberDto == null || loginMemberDto.getAuthority().equals(Authority.guest)
         || loginMemberDto.getId() != post.getMember().getId()) {
+            //admin 확인
+            if (checkAdmin(loginMemberDto)) return false;
             return true;
         }
 
         //admin 확인
-        if(loginMemberDto.getAuthority().equals(Authority.admin)){
+        if (checkAdmin(loginMemberDto)) return false;
+        return false;
+    }
+
+    private boolean checkAdmin(MemberDto loginMemberDto) {
+        if (loginMemberDto.getAuthority().equals(Authority.admin)) {
             log.info("관리자 접속 : {}", loginMemberDto.getAuthority());
             loginMemberDto.setAuthority(Authority.admin);
-            return false;
+            return true;
         }
-
         return false;
     }
 
@@ -366,11 +372,7 @@ public class PostFormController {
             return loginMemberDto;
 
         }else if(!loginMemberDto.getId().equals(postDto.getMember().getId())){
-            if(loginMemberDto.getAuthority().equals(Authority.admin)){
-                log.info("관리자 접속 : {}", loginMemberDto.getAuthority());
-                loginMemberDto.setAuthority(Authority.admin);
-                return loginMemberDto;
-            }
+            if (checkAdmin(loginMemberDto)) return loginMemberDto;
             loginMemberDto.setAuthority(Authority.commentOnly);
 
             return loginMemberDto;
