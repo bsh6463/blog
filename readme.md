@@ -10,10 +10,14 @@
   - Packaging: Jar
   - Java: 11
 
-2.Dependacncies
+3. Dependacncies
   - Lombok
   - Spring Web
   - SpringData JPA
-  - H2 Database
+  - H2 Database --> 211022 : MySQL 변경
   - Thymeleaf
+
+4. Release
+  - Heroku
+  - https://blog-by-sh.herokuapp.com/
 
