@@ -19,4 +19,4 @@ logging.level:
 
 
 server:
-  port: $PORT
+  port: 80
