@@ -279,10 +279,11 @@ public class PostFormController {
 
         Post post = editPostUsingDto(id, postForm);
 
-
         model.addAttribute("member", loginMemberDto);
         model.addAttribute("post", post.postToDto());
         redirectAttributes.addAttribute("postID", postForm.getId());
+
+        init();
         return "redirect:/posts/{postId}";
     }
 
